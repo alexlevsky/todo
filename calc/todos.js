@@ -1,0 +1,231 @@
+$(function() {
+
+    var Todo = Backbone.Model.extend({
+        defaults: function() {
+            return {
+                name: "default good",
+                order: Todos.nextOrder(),
+                done: false
+            };
+        },
+        initialize: function() {
+            if (this.isValid() == true) {
+                $("#invalid-error").hide();
+            } else {
+                $("#invalid-error").show();
+            }
+            this.on("change", function() {
+                console.log("Model has been changed !");
+            })
+        },
+        toggle: function() {
+            this.save({ done: !this.get("done") });
+        },
+        validate: function(attrs) {
+            if (!attrs.name.trim()) return "invalid value";
+        }
+    });
+
+
+    var TodoList = Backbone.Collection.extend({
+        model: Todo,
+        localStorage: new Backbone.LocalStorage("todos-backbone"),
+        done: function() {
+            return this.where({ done: true });
+        },
+        remaining: function() {
+            return this.where({ done: false });
+        },
+        nextOrder: function() {
+            if (!this.length) return 1;
+            return this.last().get('order') + 1;
+        },
+        comparator: 'order'
+
+    });
+
+    var Todos = new TodoList;
+
+    var TodoView = Backbone.View.extend({
+        tagName: "li",
+        template: _.template($('#item-template').html()),
+        events: {
+            "click .toggle": "toggleDone",
+            "dblclick .view": "edit",
+            "click a.destroy": "clear",
+            "keypress .edit": "updateOnEnter",
+            "blur .edit": "close"
+        },
+        initialize: function() {
+            this.listenTo(this.model, 'change', this.render);
+            this.listenTo(this.model, 'destroy', this.remove);
+        },
+        render: function() {
+            this.$el.html(this.template(this.model.toJSON()));
+            this.$el.toggleClass('done', this.model.get('done'));
+            this.input = this.$('.edit');
+            return this;
+        },
+        toggleDone: function() {
+            this.model.toggle();
+        },
+        edit: function() {
+            console.log(this.model.attributes)
+                // this.$el.addClass("editing");
+                // this.input.focus();
+            var view = new TodoModal({ model: this.model, type: "change" });
+            view.render().showModal({
+                x: 400,
+                y: 220
+            });
+
+
+        },
+        close: function() {
+            var value = this.input.val();
+            if (!value) {
+                this.clear();
+            } else {
+                this.model.save({ name: value });
+                this.$el.removeClass("editing");
+            }
+        },
+        updateOnEnter: function(e) {
+            if (e.keyCode == 13) this.close();
+        },
+        clear: function() {
+            this.model.destroy();
+        }
+
+    });
+    var AppView = Backbone.View.extend({
+        el: $("#todoapp"),
+        statsTemplate: _.template($('#stats-template').html()),
+        events: {
+            "keypress #new-todo": "createOnEnter",
+            "click #clear-completed": "clearCompleted",
+            "click #add-btn": "showModal",
+            "click #calc-btn": "calculateTotal",
+        },
+        initialize: function() {
+
+            this.input = this.$("#new-todo");
+            this.allCheckbox = this.$("#toggle-all")[0];
+
+            this.listenTo(Todos, 'add', this.addOne);
+            this.listenTo(Todos, 'reset', this.addAll);
+            this.listenTo(Todos, 'all', this.render);
+
+            this.footer = this.$('footer');
+            this.main = $('#main');
+
+            Todos.fetch();
+        },
+        render: function() {
+            var done = Todos.done().length;
+            var remaining = Todos.remaining().length;
+
+            if (Todos.length) {
+                this.main.show();
+                this.footer.show();
+                this.footer.html(this.statsTemplate({ done: done, remaining: remaining }));
+            } else {
+                this.main.hide();
+                this.footer.hide();
+            }
+
+            this.allCheckbox.checked = !remaining;
+        },
+        addOne: function(todo) {
+            console.log("add one func");
+            var view = new TodoView({ model: todo });
+            this.$("#todo-list").append(view.render().el);
+        },
+        showModal: function(todo) {
+            console.log("show modal func");
+            var view = new TodoModal({ model: todo, type: "addNew" });
+            view.render().showModal({
+                x: 400,
+                y: 220
+            });
+        },
+        calculateTotal: function() {
+            console.log("calculate total");
+        },
+        createOnEnter: function(e) {
+            // delete
+        },
+        clearCompleted: function() {
+            _.invoke(Todos.done(), 'destroy');
+            return false;
+        }
+    });
+
+    TodoModal = Backbone.ModalView.extend({
+        name: "AddPersonView",
+        model: Todo,
+        params: "",
+        templateHtml: _.template($('#modal-template').html()),
+
+        /*
+      "<div class='modalContainer' " +
+			"<div class='modal-header'>Add a new person to the list</div>" +
+			"<form>" +
+                "<table class='compact'>" +
+                    "<tr><td>" +
+				        "<label for='name'>Name</label>" +
+                        "</td><td>" +
+				        "<input type='text' id='name' />" +
+                    "</td></tr>" +
+                    "<tr><td>" +
+				        "<label for='price'>price</label>" +
+                        "</td><td>" +
+				        "<input type='number' id='price' />" +
+                    "</td></tr>" +
+                    "<tr><td></td><td>" +
+                "<input id='addGoodBtn' type='submit' value='Save'/>" +
+                "<input id='cancelBtn' type='button' value='Cancel'/>" +
+                    "</td></tr>" +
+                "</table>" +
+      "</form>" +
+      "</div>",
+*/
+
+        initialize: function(params) {
+            this.params = params;
+            _.bindAll(this, "render");
+            this.template = _.template(this.templateHtml);
+        },
+        events: {
+            "submit form": "save",
+            "click #cancelBtn": "cancel"
+        },
+        save: function(event) {
+            event.preventDefault();
+            if (!this.$("#name").val() && !this.$("#price").val()) return;
+            //log 
+            console.log(this.$("#name").val() + "   " + this.$("#price").val());
+            if (this.params.type == "addNew") {
+                Todos.create({ name: this.$("#name").val() });
+                this.$("form")[0].reset();
+            }
+            if (this.params.type == "change") {
+                this.model.set("name", this.$("#name").val());
+            }
+
+        },
+        cancel: function() {
+            this.hideModal();
+        },
+        render: function() {
+            $(this.el).html(this.template());
+            console.log(this.params.type);
+            if (this.params.type == "change")
+                this.$("#name").val(this.model.attributes.name);
+            return this;
+        }
+    })
+
+    var App = new AppView;
+
+});

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Goods manager</title>
+    <link rel="stylesheet" href="todos.css" />
+</head>
+
+<body>
+
+    <div id="todoapp">
+
+        <header>
+            <h1>List of Goods</h1>
+        </header>
+
+        <section id="main">
+            <div id="invalid-error">Invalid error</div>
+            <input id="toggle-all" type="checkbox">
+            <label for="toggle-all">Mark all as active</label>
+            <ul id="todo-list"></ul>
+        </section>
+
+        <footer>
+            <a id="clear-completed">Clear deactivated</a>
+            <div id="todo-count"></div>
+        </footer>
+
+    </div>
+
+    <script src="../lib/json2.js"></script>
+    <script src="../lib/jquery.js"></script>
+    <script src="../lib/underscore.js"></script>
+    <script src="../lib/backbone.js"></script>
+    <script src="../lib/backbone.localStorage.js"></script>
+    <script src="../lib/Backbone.ModalDialog.js"></script>
+    <script src="todos.js"></script>
+
+    <!-- Templates -->
+
+    <script type="text/template" id="item-template">
+        <div class="view">
+            <input class="toggle" type="checkbox" <%=d one ? 'checked="checked"' : '' %> />
+            <label> <%- name %></label>
+            <a class="destroy"></a>
+        </div>
+        <input class="edit" type="text" value="<%- name %>" />
+    </script>
+
+    <script type="text/template" id="stats-template">
+        <div class="btnGroup">
+            <button class="addBtn" id="add-btn">Add</button>
+            <button class="calcBtn" id="cacl-btn">Sum</button>
+        </div>
+        <% if (done) { %>
+            <a id="clear-completed">Clear <%= done %> deactivated <%= done == 1 ? 'good' : 'goods' %></a>
+            <% } %>
+                <div class="todo-count"><b><%= remaining %></b>
+                    <%= remaining == 1 ? 'good' : 'goods' %> in bucket</div>
+    </script>
+
+
+    <script type="text/template" id="modal-template">
+        <div class='modalContainer'>
+            <div class='modal-header'>Add a new person to the list</div>
+            <form>
+                <table class='compact'>
+                    <tr>
+                        <td>
+                            <label for='name'>Name</label>
+                        </td>
+                        <td>
+                            <input type='text' id='name' />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for='price'>price</label>
+                        </td>
+                        <td>
+                            <input type='number' id='price' />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <input id='addGoodBtn' type='submit' value='Save' />
+                            <input id='cancelBtn' type='button' value='Cancel' />
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </script>
+
+</body>
+
+</html>
