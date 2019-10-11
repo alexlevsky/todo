@@ -5,7 +5,7 @@ $(function() {
             return {
                 name: "default good",
                 order: Todos.nextOrder(),
-                done: false
+                active: true
             };
         },
         initialize: function() {
@@ -19,7 +19,7 @@ $(function() {
             })
         },
         toggle: function() {
-            this.save({ done: !this.get("done") });
+            this.save({ active: !this.get("active") });
         },
         validate: function(attrs) {
             if (!attrs.name.trim()) return "invalid value";
@@ -30,11 +30,11 @@ $(function() {
     var TodoList = Backbone.Collection.extend({
         model: Todo,
         localStorage: new Backbone.LocalStorage("todos-backbone"),
-        done: function() {
-            return this.where({ done: true });
+        active: function() {
+            return this.where({ active: true });
         },
         remaining: function() {
-            return this.where({ done: false });
+            return this.where({ active: false });
         },
         nextOrder: function() {
             if (!this.length) return 1;
@@ -51,7 +51,7 @@ $(function() {
         tagName: "li",
         template: _.template($('#item-template').html()),
         events: {
-            "click .toggle": "toggleDone",
+            "click .toggle": "toggleActive",
             "dblclick .view": "edit",
             "click a.destroy": "clear",
             "keypress .edit": "updateOnEnter",
@@ -63,11 +63,11 @@ $(function() {
         },
         render: function() {
             this.$el.html(this.template(this.model.toJSON()));
-            this.$el.toggleClass('done', this.model.get('done'));
+            this.$el.toggleClass('active', this.model.get('active'));
             this.input = this.$('.edit');
             return this;
         },
-        toggleDone: function() {
+        toggleActive: function() {
             this.model.toggle();
         },
         edit: function() {
@@ -123,11 +123,11 @@ $(function() {
             Todos.fetch();
         },
         render: function() {
-            var done = Todos.done().length;
+            var active = Todos.active().length;
             var remaining = Todos.remaining().length;
                 this.main.show();
                 this.footer.show();
-                this.footer.html(this.statsTemplate({ done: done, remaining: remaining }));
+                this.footer.html(this.statsTemplate({ active: active, remaining: remaining }));
 
             this.allCheckbox.checked = !remaining;
         },
@@ -151,7 +151,7 @@ $(function() {
             // delete
         },
         clearCompleted: function() {
-            _.invoke(Todos.done(), 'destroy');
+            _.invoke(Todos.active(), 'destroy');
             return false;
         }
     });

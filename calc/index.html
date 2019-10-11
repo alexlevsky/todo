@@ -40,7 +40,7 @@
 
     <script type="text/template" id="item-template">
         <div class="view">
-            <input class="toggle" type="checkbox" <%= done ? 'checked="checked"' : '' %> />
+            <input class="toggle" type="checkbox" <%= active ? 'checked="checked"' : '' %> />
             <label> <%- name %></label>
             <a class="destroy"></a>
         </div>
@@ -52,8 +52,8 @@
             <button class="addBtn" id="add-btn">Add</button>
             <button class="calcBtn" id="cacl-btn">Sum</button>
         </div>
-        <% if (done) { %>
-            <a id="clear-completed">Clear <%= done %> deactivated <%= done == 1 ? 'good' : 'goods' %></a>
+        <% if (active) { %>
+            <a id="clear-completed">Clear <%= active %> deactivated <%= active == 1 ? 'good' : 'goods' %></a>
             <% } %>
                 <div class="todo-count"><b><%= remaining %></b>
                     <%= remaining == 1 ? 'good' : 'goods' %> in bucket</div>
