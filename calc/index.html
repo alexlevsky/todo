@@ -42,15 +42,28 @@
         <div class="view">
             <input class="toggle" type="checkbox" <%= active ? 'checked="checked"' : '' %> />
             <label> <%- name %></label>
+            <label> <%- price %>$</label>
             <a class="destroy"></a>
         </div>
         <input class="edit" type="text" value="<%- name %>" />
     </script>
 
+
     <script type="text/template" id="stats-template">
+        <div class="totalContainer">
+            <h2>Total</h2>
+        </div>
+        <div class="pagGroup">
+                <button>1001</button>
+                <button>1</button>
+                <button>2</button>
+                <button>3</button>
+                <button>4</button>
+        </div>
+            
         <div class="btnGroup">
-            <button class="addBtn" id="add-btn">Add</button>
-            <button class="calcBtn" id="cacl-btn">Sum</button>
+            <button class="addBtn"  id="add-btn">Add</button>
+            <button class="calcBtn" id="clc-btn">Sum</button>
         </div>
         <% if (active) { %>
             <a id="clear-completed">Clear <%= active %> deactivated <%= active == 1 ? 'good' : 'goods' %></a>

@@ -4,6 +4,7 @@ $(function() {
         defaults: function() {
             return {
                 name: "default good",
+                price: 0,
                 order: Todos.nextOrder(),
                 active: true
             };
@@ -51,11 +52,11 @@ $(function() {
         tagName: "li",
         template: _.template($('#item-template').html()),
         events: {
-            "click .toggle": "toggleActive",
-            "dblclick .view": "edit",
-            "click a.destroy": "clear",
-            "keypress .edit": "updateOnEnter",
-            "blur .edit": "close"
+            "click .toggle"   : "toggleActive",
+            "dblclick .view"  : "edit",
+            "click a.destroy" : "clear",
+            "keypress .edit"  : "updateOnEnter",
+            "blur .edit"      : "close"
         },
         initialize: function() {
             this.listenTo(this.model, 'change', this.render);
@@ -71,9 +72,6 @@ $(function() {
             this.model.toggle();
         },
         edit: function() {
-            console.log(this.model.attributes)
-                // this.$el.addClass("editing");
-                // this.input.focus();
             var view = new TodoModal({ model: this.model, type: "change" });
             view.render().showModal({
                 x: 400,
@@ -99,14 +97,20 @@ $(function() {
         }
 
     });
+
     var AppView = Backbone.View.extend({
         el: $("#todoapp"),
         statsTemplate: _.template($('#stats-template').html()),
         events: {
             "keypress #new-todo": "createOnEnter",
+            "click #clc-btn": "calculateTotal",
             "click #clear-completed": "clearCompleted",
             "click #add-btn": "showModal",
-            "click #calc-btn": "calculateTotal",
+            
+        },
+        calculateTotal: function() {
+            var sum = Todos.pluck("price").reduce(function(acc, currValue){return +acc + +currValue; }, 0);
+          $('.totalContainer').html("<h2>Total  " + sum + " $</h2>");
         },
         initialize: function() {
 
@@ -144,9 +148,6 @@ $(function() {
                 y: 220
             });
         },
-        calculateTotal: function() {
-            console.log("calculate total");
-        },
         createOnEnter: function(e) {
             // delete
         },
@@ -176,11 +177,12 @@ $(function() {
             //log 
             console.log(this.$("#name").val() + "   " + this.$("#price").val());
             if (this.params.type == "addNew") {
-                Todos.create({ name: this.$("#name").val() });
+                Todos.create({ name: this.$("#name").val(), price: this.$("#price").val() });
                 this.$("form")[0].reset();
             }
             if (this.params.type == "change") {
-                this.model.set("name", this.$("#name").val());
+                this.model.set("name", this.$("#name").val()  );
+                this.model.set("price",this.$("#price").val() );
             }
 
         },
@@ -189,10 +191,11 @@ $(function() {
         },
         render: function() {
            $(this.el).html(this.template());
-          // this.$el.html(this.templateHtml(this.model.toJSON()));
             console.log(this.params.type);
-            if (this.params.type == "change")
+            if (this.params.type == "change") {
                 this.$("#name").val(this.model.attributes.name);
+                this.$("#price").val(this.model.attributes.price);
+            }
             return this;
         }
     })
