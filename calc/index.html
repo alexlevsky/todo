@@ -16,7 +16,6 @@
         </header>
 
         <section id="main">
-            <div id="invalid-error">Invalid error</div>
             <input id="toggle-all" type="checkbox">
             <label for="toggle-all">Mark all as active</label>
             <ul id="todo-list"></ul>
@@ -41,7 +40,7 @@
 
     <script type="text/template" id="item-template">
         <div class="view">
-            <input class="toggle" type="checkbox" <%=d one ? 'checked="checked"' : '' %> />
+            <input class="toggle" type="checkbox" <%= done ? 'checked="checked"' : '' %> />
             <label> <%- name %></label>
             <a class="destroy"></a>
         </div>

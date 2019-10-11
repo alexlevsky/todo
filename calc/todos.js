@@ -45,6 +45,7 @@ $(function() {
     });
 
     var Todos = new TodoList;
+  //  Todos.create({ name: "app" })
 
     var TodoView = Backbone.View.extend({
         tagName: "li",
@@ -124,15 +125,9 @@ $(function() {
         render: function() {
             var done = Todos.done().length;
             var remaining = Todos.remaining().length;
-
-            if (Todos.length) {
                 this.main.show();
                 this.footer.show();
                 this.footer.html(this.statsTemplate({ done: done, remaining: remaining }));
-            } else {
-                this.main.hide();
-                this.footer.hide();
-            }
 
             this.allCheckbox.checked = !remaining;
         },
@@ -161,36 +156,11 @@ $(function() {
         }
     });
 
-    TodoModal = Backbone.ModalView.extend({
+    var TodoModal = Backbone.ModalView.extend({
         name: "AddPersonView",
         model: Todo,
         params: "",
-        templateHtml: _.template($('#modal-template').html()),
-
-        /*
-      "<div class='modalContainer' " +
-			"<div class='modal-header'>Add a new person to the list</div>" +
-			"<form>" +
-                "<table class='compact'>" +
-                    "<tr><td>" +
-				        "<label for='name'>Name</label>" +
-                        "</td><td>" +
-				        "<input type='text' id='name' />" +
-                    "</td></tr>" +
-                    "<tr><td>" +
-				        "<label for='price'>price</label>" +
-                        "</td><td>" +
-				        "<input type='number' id='price' />" +
-                    "</td></tr>" +
-                    "<tr><td></td><td>" +
-                "<input id='addGoodBtn' type='submit' value='Save'/>" +
-                "<input id='cancelBtn' type='button' value='Cancel'/>" +
-                    "</td></tr>" +
-                "</table>" +
-      "</form>" +
-      "</div>",
-*/
-
+        templateHtml: $('#modal-template').html(),
         initialize: function(params) {
             this.params = params;
             _.bindAll(this, "render");
@@ -218,7 +188,8 @@ $(function() {
             this.hideModal();
         },
         render: function() {
-            $(this.el).html(this.template());
+           $(this.el).html(this.template());
+          // this.$el.html(this.templateHtml(this.model.toJSON()));
             console.log(this.params.type);
             if (this.params.type == "change")
                 this.$("#name").val(this.model.attributes.name);
