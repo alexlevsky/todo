@@ -179,19 +179,19 @@ $(function() {
             currentPage: "page"
         },
         active: function(){
-           // return active
+            return { name: "sdfdsf", price: 67, active: false }
         },
         remaining: function(){
-
+            return { name: "sdfdsf", price: 67, active: false }
         },
         parse: function(d){
-           // console.log(Todos.getLastPage())
+           console.log(d )
         },
         parseState: function(d){
             console.log("parseState  "  + d)
         },
         initialize: function(){
-           
+           this.fetch({reset: true})
         },
         comparator: 'order'
       });
@@ -200,8 +200,7 @@ $(function() {
   //   var good = new Good([{name: "aaaaa", price: 700, active: false, order: 100},  {name: "bbbbb", price: 800, active: false, order: 101} ]);
       
         var Todos = new TodoList();
-        console.log( Todos.getFirstPage()  );
-
+         
      //  $("#item-template").append(good.render().$el);
 
 
