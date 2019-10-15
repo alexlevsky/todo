@@ -5,7 +5,7 @@ $(function() {
             return {
                 name: "default good",
                 price: 0,
-                order: Todos.nextOrder(),
+                order: 5,
                 active: true
             };
         },
@@ -28,6 +28,7 @@ $(function() {
     });
 
 
+/*
     var TodoList = Backbone.Collection.extend({
         model: Todo,
         localStorage: new Backbone.LocalStorage("todos-backbone"),
@@ -44,8 +45,10 @@ $(function() {
         comparator: 'order'
 
     });
+*/
 
-    var Todos = new TodoList;
+
+ //   var Todos = new TodoList;
   //  Todos.create({ name: "app" })
 
     var TodoView = Backbone.View.extend({
@@ -156,6 +159,52 @@ $(function() {
             return false;
         }
     });
+
+
+
+    var TodoList = Backbone.PageableCollection.extend({
+        mode: "server",
+        model: Todo,
+        url: "https://5d668943520e1b00141ee3bd.mockapi.io/api/todo",
+        state: {
+            firstPage: 1,
+            pageSize: 5,
+            sortKey: "name",
+            totalRecords: 11,
+            order: 1
+        },
+        queryParams: {
+            totalPages: 5,
+            pageSize: "limit",
+            currentPage: "page"
+        },
+        active: function(){
+           // return active
+        },
+        remaining: function(){
+
+        },
+        parse: function(d){
+           // console.log(Todos.getLastPage())
+        },
+        parseState: function(d){
+            console.log("parseState  "  + d)
+        },
+        initialize: function(){
+           
+        },
+        comparator: 'order'
+      });
+
+    //  console.log(Todos);
+  //   var good = new Good([{name: "aaaaa", price: 700, active: false, order: 100},  {name: "bbbbb", price: 800, active: false, order: 101} ]);
+      
+        var Todos = new TodoList();
+        console.log( Todos.getFirstPage()  );
+
+     //  $("#item-template").append(good.render().$el);
+
+
 
     var TodoModal = Backbone.ModalView.extend({
         name: "AddPersonView",
