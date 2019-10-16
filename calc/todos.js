@@ -18,20 +18,55 @@ $(function() {
             this.on("change", function() {
                 console.log("Model has been changed !");
             })
+            this.on("add", function(){
+                console.log("Model has been created ");
+            })
+            this.on("destroy", function(){
+                console.log("Model has been deleted ");
+            })
+            this.on("change:active", function(){
+                console.log("Change active  checkbox");
+            })
+           // this.model.fetch();
         },
+        sync: function(method) {
+            if (method === "create") {
+                console.log("create");
+            //  arguments[0] = "update";
+              }
+            if (method === "read") {
+                console.log("read");
+             //  arguments[0] = "update";
+            }
+            if (method === "update") {
+                console.log("update");
+              //  arguments[0] = "update";
+            }
+            if (method === "delete") {
+                console.log("delete");
+              //  arguments[0] = "update";
+            }
+         // return Backbone.sync.apply(this, arguments);
+        },
+        isNew: function(){
+            return false;
+        },
+        urlRoot:   "https://5d668943520e1b00141ee3bd.mockapi.io/api/todo/5",
         toggle: function() {
-            this.save({ active: !this.get("active") });
+         //   this.reset();
+           // this.save({ active: !this.get("active") });
+           Backbone.sync("delete", this.get("order"));
         },
         validate: function(attrs) {
             if (!attrs.name.trim()) return "invalid value";
         }
     });
 
-
-/*
     var TodoList = Backbone.Collection.extend({
         model: Todo,
-        localStorage: new Backbone.LocalStorage("todos-backbone"),
+        local: true,
+        remote: true,
+        url: "https://5d668943520e1b00141ee3bd.mockapi.io/api/todo",
         active: function() {
             return this.where({ active: true });
         },
@@ -42,14 +77,12 @@ $(function() {
             if (!this.length) return 1;
             return this.last().get('order') + 1;
         },
+     
         comparator: 'order'
-
     });
-*/
-
-
- //   var Todos = new TodoList;
-  //  Todos.create({ name: "app" })
+        
+        var Todos = new TodoList();  
+      console.log( Todos.models )  
 
     var TodoView = Backbone.View.extend({
         tagName: "li",
@@ -161,50 +194,6 @@ $(function() {
     });
 
 
-
-    var TodoList = Backbone.PageableCollection.extend({
-        mode: "server",
-        model: Todo,
-        url: "https://5d668943520e1b00141ee3bd.mockapi.io/api/todo",
-        state: {
-            firstPage: 1,
-            pageSize: 5,
-            sortKey: "name",
-            totalRecords: 11,
-            order: 1
-        },
-        queryParams: {
-            totalPages: 5,
-            pageSize: "limit",
-            currentPage: "page"
-        },
-        active: function(){
-            return { name: "sdfdsf", price: 67, active: false }
-        },
-        remaining: function(){
-            return { name: "sdfdsf", price: 67, active: false }
-        },
-        parse: function(d){
-           console.log(d )
-        },
-        parseState: function(d){
-            console.log("parseState  "  + d)
-        },
-        initialize: function(){
-           this.fetch({reset: true})
-        },
-        comparator: 'order'
-      });
-
-    //  console.log(Todos);
-  //   var good = new Good([{name: "aaaaa", price: 700, active: false, order: 100},  {name: "bbbbb", price: 800, active: false, order: 101} ]);
-      
-        var Todos = new TodoList();
-         
-     //  $("#item-template").append(good.render().$el);
-
-
-
     var TodoModal = Backbone.ModalView.extend({
         name: "AddPersonView",
         model: Todo,
@@ -231,6 +220,7 @@ $(function() {
             if (this.params.type == "change") {
                 this.model.set("name", this.$("#name").val()  );
                 this.model.set("price",this.$("#price").val() );
+                this.model.save();
             }
 
         },
