@@ -26,7 +26,6 @@ $(function() {
             this.on("change:active", function(){
                 console.log("Change active  checkbox");
             })
-           // this.model.fetch();
         },
         isNew(){
            return this.get("order") ? false : true;
@@ -47,9 +46,7 @@ $(function() {
          url: "https://5d668943520e1b00141ee3bd.mockapi.io/api/todo/",
 
         toggle: function() {
-         //   this.reset();
-           // this.save({ active: !this.get("active") });
-         //  Backbone.sync("delete", this.get("order"));
+            this.save({ active: !this.get("active") });
         },
         validate: function(attrs) {
             if (!attrs.name.trim()) return "invalid value";
@@ -72,10 +69,10 @@ $(function() {
             return Backbone.sync(method, model, options);
         },
         active: function() {
-            return this.where({ active: true });
+            return this.where({ active: false });
         },
         remaining: function() {
-            return this.where({ active: false });
+            return this.where({ active: true });
         },
         nextOrder: function() {
             if (!this.length) return 1;
@@ -146,11 +143,12 @@ $(function() {
             "click #clc-btn": "calculateTotal",
             "click #clear-completed": "clearCompleted",
             "click #add-btn": "showModal",
-            
+            "click #sAll": "selectAll",
+            "click #usAll": "unselectAll"
         },
         calculateTotal: function() {
-            var sum = Todos.pluck("price").reduce(function(acc, currValue){return +acc + +currValue; }, 0);
-          $('.totalContainer').html("<h2>Total  " + sum + " $</h2>");
+            var sum = Todos.where({ active: true }).reduce(function(acc, currValue){return +acc + +currValue.get("price") }, 0);
+            $('.totalContainer').html("<h2>Total  " + sum + " $</h2>");
         },
         initialize: function() {
 
@@ -194,6 +192,18 @@ $(function() {
         clearCompleted: function() {
             _.invoke(Todos.active(), 'destroy');
             return false;
+        },
+        selectAll: function () {
+            Todos.each(function (todo) {
+                if(!todo.get("active"))
+                    todo.save({'active': true});
+            });
+        },
+        unselectAll: function (){
+            Todos.each(function (todo) {
+                if(todo.get("active"))
+                    todo.save({'active': false});
+            });
         }
     });
 

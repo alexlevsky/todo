@@ -72,6 +72,7 @@ body {
 	position: relative;
 	font-size: 24px;
 	border-bottom: 1px solid #cccccc;
+	color: #afafaf;
 }
 
 #todo-list li:last-child {
@@ -79,8 +80,12 @@ body {
 }
 
 #todo-list li.active label {
-	color: #777777;
-	text-decoration: line-through;
+	color: black;
+	text-decoration-line: none;
+}
+
+#todo-list li.active {
+	background-color: #e0f99f;
 }
 
 #todo-list .destroy {
@@ -100,27 +105,6 @@ body {
 
 #todo-list .destroy:hover {
   	background-position: 0 -20px;
-}
-
-#todo-list li.editing {
-	border-bottom: none;
-	margin-top: -1px;
-	padding: 0;
-}
-
-#todo-list li.editing:last-child {
-	margin-bottom: -1px;
-}
-
-#todo-list li.editing .edit {
-	display: block;
-	width: 444px;
-	padding: 13px 15px 14px 20px;
-	margin: 0;
-}
-
-#todo-list li.editing .view {
-	display: none;
 }
 
 #todo-list li .view label {
@@ -214,3 +198,70 @@ body {
 .hidden {
    display: none;
 }
+
+
+
+
+
+
+button {
+	background-color: rgb(61, 104, 248);
+	color: white;
+	padding: 14px;
+	font-size: 14px;
+	border: none;
+	cursor: pointer;
+  }
+
+input[type="checkbox"] {
+	top: 0;
+	left: 0;
+	height: 25px;
+	width: 25px;
+	background-color: #eee;
+}
+input[type="checkbox"]:checked {
+	background-color: #2196F3;
+}
+input[type="checkbox"]:hover {
+	background-color: #ccc;
+}
+
+  
+  /* The container <div> - needed to position the dropdown content */
+  .dropdown {
+	position: relative;
+	display: inline-block;
+  }
+  
+  /* Dropdown Content (Hidden by Default) */
+  .dropdown-content {
+	display: none;
+	position: absolute;
+	background-color: #f9f9f9;
+	min-width: 160px;
+	box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+	z-index: 1;
+  }
+  
+  /* Links inside the dropdown */
+  .dropdown-content a {
+	color: rgb(63, 58, 58);
+	padding: 12px 16px;
+	text-decoration: none;
+	display: block;
+  }
+  
+  /* Change color of dropdown links on hover */
+  .dropdown-content a:hover {background-color: #f1f1f1}
+  
+  /* Show the dropdown menu on hover */
+  .dropdown:hover .dropdown-content {
+	display: block;
+  }
+  
+  /* Change the background color of the dropdown button when the dropdown content is shown */
+  .dropdown:hover .dropbtn {
+	background-color: #717ffd;
+  }
+
