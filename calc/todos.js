@@ -5,7 +5,6 @@ $(function() {
             return {
                 name: "default good",
                 price: 0,
-                order: 5,
                 active: true
             };
         },
@@ -29,10 +28,24 @@ $(function() {
             })
            // this.model.fetch();
         },
-        isNew: function(){
-            return false;
+        isNew(){
+           return this.get("order") ? false : true;
         },
-        urlRoot:   "https://5d668943520e1b00141ee3bd.mockapi.io/api/todo/5",
+        sync: function(method, model, options){
+            console.log(model.get("order"));
+            switch(method){
+                case "read": options.url   = "https://5d668943520e1b00141ee3bd.mockapi.io/api/todo/";  break; 
+                case "update": options.url = "https://5d668943520e1b00141ee3bd.mockapi.io/api/todo/" + model.get("order"); break; 
+                case "delete": options.url = "https://5d668943520e1b00141ee3bd.mockapi.io/api/todo/" + model.get("order");  break; 
+                case "create": options.url = "https://5d668943520e1b00141ee3bd.mockapi.io/api/todo/"; break; 
+            }
+            return Backbone.sync(method, model, options);
+        },
+        urlRoot: function(){
+          return "https://5d668943520e1b00141ee3bd.mockapi.io/api/todo/"  
+        },
+         url: "https://5d668943520e1b00141ee3bd.mockapi.io/api/todo/",
+
         toggle: function() {
          //   this.reset();
            // this.save({ active: !this.get("active") });
@@ -47,7 +60,17 @@ $(function() {
         model: Todo,
         local: true,
         remote: true,
-        url: "https://5d668943520e1b00141ee3bd.mockapi.io/api/todo/5",
+        url: "https://5d668943520e1b00141ee3bd.mockapi.io/api/todo",
+        sync: function(method, model, options){
+            console.log(model.get("order"));
+            switch(method){
+                case "read": options.url = "https://5d668943520e1b00141ee3bd.mockapi.io/api/todo/";  break; 
+                case "update": options.url = "https://5d668943520e1b00141ee3bd.mockapi.io/api/todo/" + model.get("order"); break; 
+                case "delete": options.url = "https://5d668943520e1b00141ee3bd.mockapi.io/api/todo/" + model.get("order");  break; 
+                case "create": options.url = "https://5d668943520e1b00141ee3bd.mockapi.io/api/todo/"; break; 
+            }
+            return Backbone.sync(method, model, options);
+        },
         active: function() {
             return this.where({ active: true });
         },
@@ -58,12 +81,12 @@ $(function() {
             if (!this.length) return 1;
             return this.last().get('order') + 1;
         },
-     
+
         comparator: 'order'
     });
         
         var Todos = new TodoList();  
-      console.log( Todos.models )  
+      console.log( Todos )  
 
     var TodoView = Backbone.View.extend({
         tagName: "li",
@@ -141,7 +164,7 @@ $(function() {
             this.footer = this.$('footer');
             this.main = $('#main');
 
-            Todos.fetch();
+           Todos.fetch();
         },
         render: function() {
             var active = Todos.active().length;
