@@ -49,7 +49,7 @@ $(function() {
             this.save({ active: !this.get("active") });
         },
         validate: function(attrs) {
-            if (!attrs.name.trim()) return "invalid value";
+            if (!attrs.name.trim() || attrs.price < 0) return "invalid value";
         }
     });
 
@@ -156,14 +156,17 @@ $(function() {
             "click #prevPage": "prevPage",
             "click #firstPage": "firstPage",
             "click #lastPage": "lastPage",
+            "click #pageN" : "getPage"
         },
         nextPage: function(){
-            Todos.getNextPage();
-            this.$("#todo-list").empty();
+                Todos.getNextPage();
+                this.$("#todo-list").empty();
         },
         prevPage: function(){
-            Todos.getPreviousPage();
-            this.$("#todo-list").empty();
+            if(Todos.hasPreviousPage()){
+                Todos.getPreviousPage();
+                this.$("#todo-list").empty();
+            }
         },
         firstPage: function(){
             Todos.getFirstPage();
@@ -171,6 +174,10 @@ $(function() {
         },
         lastPage: function(){
             Todos.getLastPage();
+            this.$("#todo-list").empty();
+        },
+        getPage: function(){
+            Todos.getPage(2);
             this.$("#todo-list").empty();
         },
         calculateTotal: function() {
@@ -201,6 +208,7 @@ $(function() {
         addOne: function(todo) {
             console.log("add one func");
             var view = new TodoView({ model: todo });
+            if(Todos.state.pageSize < Todos.length) return this;  // fixed items on page  
             this.$("#todo-list").append(view.render().el);
         },
         showModal: function(todo) {

@@ -64,7 +64,7 @@
         <div class="pagGroup">
                 <button id="firstPage"><<</button>
                 <button id="prevPage"><</button>
-                <button>2</button>
+                <button id="pageN">2</button>
                 <button id="nextPage">></button>
                 <button id="lastPage">>></button>
         </div>
@@ -83,7 +83,7 @@
 
     <script type="text/template" id="modal-template">
         <div class='modalContainer'>
-            <div class='modal-header'>Add a new person to the list</div>
+            <div class='modal-header'>Add a new good to the list</div>
             <form>
                 <table class='compact'>
                     <tr>
@@ -107,6 +107,7 @@
                         <td>
                             <input id='addGoodBtn' type='submit' value='Save' />
                             <input id='cancelBtn' type='button' value='Cancel' />
+                            <div id="invalid-error">Error: invalid value, model don`t save</div>
                         </td>
                     </tr>
                 </table>
