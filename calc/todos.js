@@ -29,25 +29,6 @@ $(function() {
             })
            // this.model.fetch();
         },
-        sync: function(method) {
-            if (method === "create") {
-                console.log("create");
-            //  arguments[0] = "update";
-              }
-            if (method === "read") {
-                console.log("read");
-             //  arguments[0] = "update";
-            }
-            if (method === "update") {
-                console.log("update");
-              //  arguments[0] = "update";
-            }
-            if (method === "delete") {
-                console.log("delete");
-              //  arguments[0] = "update";
-            }
-         // return Backbone.sync.apply(this, arguments);
-        },
         isNew: function(){
             return false;
         },
@@ -55,7 +36,7 @@ $(function() {
         toggle: function() {
          //   this.reset();
            // this.save({ active: !this.get("active") });
-           Backbone.sync("delete", this.get("order"));
+         //  Backbone.sync("delete", this.get("order"));
         },
         validate: function(attrs) {
             if (!attrs.name.trim()) return "invalid value";
@@ -66,7 +47,7 @@ $(function() {
         model: Todo,
         local: true,
         remote: true,
-        url: "https://5d668943520e1b00141ee3bd.mockapi.io/api/todo",
+        url: "https://5d668943520e1b00141ee3bd.mockapi.io/api/todo/5",
         active: function() {
             return this.where({ active: true });
         },
