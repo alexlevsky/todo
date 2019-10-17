@@ -53,11 +53,19 @@ $(function() {
         }
     });
 
-    var TodoList = Backbone.Collection.extend({
-        model: Todo,
-        local: true,
-        remote: true,
+    var TodoList = Backbone.PageableCollection.extend({
         url: "https://5d668943520e1b00141ee3bd.mockapi.io/api/todo",
+        model: Todo,
+        mode: "server",
+        state: {
+          pageSize: 4,
+          sortKey: "name",
+          order: 1
+        },
+        queryParams: {
+          currentPage: "page",
+          pageSize: "limit"
+        },
         sync: function(method, model, options){
             console.log(model.get("order"));
             switch(method){
@@ -78,9 +86,10 @@ $(function() {
             if (!this.length) return 1;
             return this.last().get('order') + 1;
         },
-
         comparator: 'order'
-    });
+
+      });
+
         
         var Todos = new TodoList();  
       console.log( Todos )  
@@ -114,8 +123,6 @@ $(function() {
                 x: 400,
                 y: 220
             });
-
-
         },
         close: function() {
             var value = this.input.val();
@@ -144,7 +151,27 @@ $(function() {
             "click #clear-completed": "clearCompleted",
             "click #add-btn": "showModal",
             "click #sAll": "selectAll",
-            "click #usAll": "unselectAll"
+            "click #usAll": "unselectAll",
+            "click #nextPage": "nextPage",
+            "click #prevPage": "prevPage",
+            "click #firstPage": "firstPage",
+            "click #lastPage": "lastPage",
+        },
+        nextPage: function(){
+            Todos.getNextPage();
+            this.$("#todo-list").empty();
+        },
+        prevPage: function(){
+            Todos.getPreviousPage();
+            this.$("#todo-list").empty();
+        },
+        firstPage: function(){
+            Todos.getFirstPage();
+            this.$("#todo-list").empty();
+        },
+        lastPage: function(){
+            Todos.getLastPage();
+            this.$("#todo-list").empty();
         },
         calculateTotal: function() {
             var sum = Todos.where({ active: true }).reduce(function(acc, currValue){return +acc + +currValue.get("price") }, 0);
@@ -170,8 +197,6 @@ $(function() {
                 this.main.show();
                 this.footer.show();
                 this.footer.html(this.statsTemplate({ active: active, remaining: remaining }));
-
-            this.allCheckbox.checked = !remaining;
         },
         addOne: function(todo) {
             console.log("add one func");
