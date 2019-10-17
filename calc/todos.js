@@ -138,6 +138,10 @@ $(function() {
         },
         clear: function() {
             this.model.destroy();
+            $("#todo-list").empty();
+            setTimeout(function(){
+                    Todos.fetch();
+            }, 170);
         }
 
     });
