@@ -11,7 +11,7 @@ $(function() {
             };
         },
         initialize: function() {
-           
+             this.validateMessage();
             // log events
             this.on("change", function() {
                 console.log("Model has been changed !");
@@ -118,8 +118,6 @@ $(function() {
             "click .toggle"   : "toggleActive",
             "dblclick .view"  : "edit",
             "click a.destroy" : "clear",
-            "keypress .edit"  : "updateOnEnter",
-            "blur .edit"      : "close"
         },
         initialize: function() {
             this.listenTo(this.model, 'change', this.render);
@@ -141,18 +139,6 @@ $(function() {
                 x: 400,
                 y: 220
             });
-        },
-        close: function() {
-            var value = this.input.val();
-            if (!value) {
-                this.clear();
-            } else {
-                this.model.save({ name: value });
-                this.$el.removeClass("editing");
-            }
-        },
-        updateOnEnter: function(e) {
-            if (e.keyCode == 13) this.close();
         },
         clear: function() {
             this.model.destroy();
