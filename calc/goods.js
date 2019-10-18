@@ -73,6 +73,7 @@ $(function() {
         url: mockBaseUrl,
         model: Goods,
         mode: "server",
+        comparator: 'order',
         state: {
           pageSize: 4,
           sortKey: "name",
@@ -105,14 +106,11 @@ $(function() {
                     self.state.lastPage =  Math.ceil( data.length / self.state.pageSize);  
                 });
             })
-        },
-        comparator: 'order'
-
+        }
       });
 
         
       var goods = new GoodsList();  
-      console.log( goods )  
 
     var GoodsView = Backbone.View.extend({
         tagName: "li",
@@ -193,17 +191,23 @@ $(function() {
           this.$("#goods-list").empty();
         },
         calculateTotal: function() {
-            var sum = goods.where({ active: true }).reduce(function(acc, currValue){return +acc + +currValue.get("price") }, 0);
-            $('.totalContainer').html("<h2>Total  " + sum + " $</h2>");
+            $.get(mockBaseUrl, function(data){
+
+                var sum = $.grep(data, function(d){
+                    return d.active == true;
+
+                })
+                .reduce(function(acc, currValue){
+                    return +acc +  +currValue.price
+                }, 0);
+                
+                $('.totalContainer').html("<h2>Total  " + sum + " $</h2>"); 
+            });  
         },
         initialize: function() {
-
-          
-
             this.listenTo(goods, 'add', this.addOne);
             this.listenTo(goods, 'reset', this.addAll);
             this.listenTo(goods, 'all', this.render);
-
             this.footer = this.$('footer');
            goods.fetch();
         },
