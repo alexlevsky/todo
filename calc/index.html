@@ -23,7 +23,7 @@
             </div>
           </div> 
 
-          <div id="currPage"></div>
+          <h2 id="currPage"></h2>
         <section id="main">
             <ul id="goods-list"></ul>
         </section>
@@ -46,7 +46,10 @@
 
     <script type="text/template" id="item-template">
         <div class="view">
+            
             <input class="toggle" type="checkbox" <%= active ? 'checked="checked"' : '' %> />
+
+
             <label class="nameOfGoods"> <%- name %></label>
             <label class="priceOfGoods"> <%- price %>$</label>
             <a class="destroy"></a>

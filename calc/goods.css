@@ -53,11 +53,12 @@ body {
 	font-size: 24px;
 	border-bottom: 1px solid #cccccc;
 	color: #afafaf;
+	margin-top: 3px;
+	margin-bottom:  3px;
+	border: 1px rgb(14, 14, 14) solid
 }
 
-#goods-list li:last-child {
-	border-bottom: none;
-}
+
 
 #goods-list li.active label {
 	color: black;
@@ -87,13 +88,6 @@ body {
   	background-position: 0 -20px;
 }
 
-#goods-list li .view label {
-	word-break: break-word;
-}
-
-#goods-list li .edit {
-	display: none;
-}
 
 #goodsapp footer {
 	display: none;
@@ -143,32 +137,15 @@ button {
 	cursor: pointer;
   }
 
-input[type="checkbox"] {
-	top: 0;
-	left: 0;
-	height: 25px;
-	width: 25px;
-	background-color: #eee;
-}
-input[type="checkbox"]:checked {
-	background-color: #2196F3;
-}
-input[type="checkbox"]:hover {
-	background-color: #ccc;
-}
-
 #currPage {
-	font-size: 18px;
 	float: right;
 }
   
-  /* The container <div> - needed to position the dropdown content */
   .dropdown {
 	position: relative;
 	display: inline-block;
   }
   
-  /* Dropdown Content (Hidden by Default) */
   .dropdown-content {
 	display: none;
 	position: absolute;
@@ -178,7 +155,6 @@ input[type="checkbox"]:hover {
 	z-index: 1;
   }
   
-  /* Links inside the dropdown */
   .dropdown-content a {
 	color: rgb(63, 58, 58);
 	padding: 12px 16px;
@@ -186,15 +162,15 @@ input[type="checkbox"]:hover {
 	display: block;
   }
   
-  /* Change color of dropdown links on hover */
+  
   .dropdown-content a:hover {background-color: #f1f1f1}
   
-  /* Show the dropdown menu on hover */
+  
   .dropdown:hover .dropdown-content {
 	display: block;
   }
   
-  /* Change the background color of the dropdown button when the dropdown content is shown */
+
   .dropdown:hover .dropbtn {
 	background-color: #717ffd;
   }

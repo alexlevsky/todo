@@ -200,7 +200,7 @@ $(function() {
                 .reduce(function(acc, currValue){
                     return +acc +  +currValue.price
                 }, 0);
-                
+
                 $('.totalContainer').html("<h2>Total  " + sum + " $</h2>"); 
             });  
         },
@@ -267,7 +267,10 @@ $(function() {
             //log 
             console.log(this.$("#name").val() + "   " + this.$("#price").val());
             if (this.params.type == "addNew") {
-                goods.create({ name: this.$("#name").val(), price: this.$("#price").val() });
+                goods.create({ name: this.$("#name").val(),
+                               price: this.$("#price").val(),
+                               active: true
+                             });
                 this.$("form")[0].reset();
             }
             if (this.params.type == "change") {
