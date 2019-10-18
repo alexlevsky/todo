@@ -1,6 +1,6 @@
 $(function() {
 
-    var Todo = Backbone.Model.extend({
+    var Goods = Backbone.Model.extend({
         defaults: function() {
             return {
                 name: "default good",
@@ -14,6 +14,7 @@ $(function() {
             } else {
                 $("#invalid-error").show();
             }
+            // log events
             this.on("change", function() {
                 console.log("Model has been changed !");
             })
@@ -53,9 +54,9 @@ $(function() {
         }
     });
 
-    var TodoList = Backbone.PageableCollection.extend({
+    var GoodsList = Backbone.PageableCollection.extend({
         url: "https://5d668943520e1b00141ee3bd.mockapi.io/api/todo",
-        model: Todo,
+        model: Goods,
         mode: "server",
         state: {
           pageSize: 4,
@@ -64,7 +65,8 @@ $(function() {
         },
         queryParams: {
           currentPage: "page",
-          pageSize: "limit"
+          pageSize: "limit",
+          totalPages: 4
         },
         sync: function(method, model, options){
             console.log(model.get("order"));
@@ -91,10 +93,11 @@ $(function() {
       });
 
         
-        var Todos = new TodoList();  
-      console.log( Todos )  
+        var goods = new GoodsList();  
+      console.log( goods )  
+      Backbone.history.start()
 
-    var TodoView = Backbone.View.extend({
+    var GoodsView = Backbone.View.extend({
         tagName: "li",
         template: _.template($('#item-template').html()),
         events: {
@@ -118,7 +121,7 @@ $(function() {
             this.model.toggle();
         },
         edit: function() {
-            var view = new TodoModal({ model: this.model, type: "change" });
+            var view = new GoodsModal({ model: this.model, type: "change" });
             view.render().showModal({
                 x: 400,
                 y: 220
@@ -140,7 +143,7 @@ $(function() {
             this.model.destroy();
             $("#todo-list").empty();
             setTimeout(function(){
-                    Todos.fetch();
+                    goods.fetch();
             }, 170);
         }
 
@@ -160,32 +163,34 @@ $(function() {
             "click #prevPage": "prevPage",
             "click #firstPage": "firstPage",
             "click #lastPage": "lastPage",
-            "click #pageN" : "getPage"
+            "click #page1" : "getPage(1)",
+            "click #page2" : "getPage(2)",
+            "click #page3" : "getPage(3)"
         },
         nextPage: function(){
-                Todos.getNextPage();
+                goods.getNextPage();
                 this.$("#todo-list").empty();
         },
         prevPage: function(){
-            if(Todos.hasPreviousPage()){
-                Todos.getPreviousPage();
+            if(goods.hasPreviousPage()){
+                goods.getPreviousPage();
                 this.$("#todo-list").empty();
             }
         },
         firstPage: function(){
-            Todos.getFirstPage();
+            goods.getFirstPage();
             this.$("#todo-list").empty();
         },
         lastPage: function(){
-            Todos.getLastPage();
+            goods.getLastPage();
             this.$("#todo-list").empty();
         },
-        getPage: function(){
-            Todos.getPage(2);
+        getPage: function(n){
+            goods.getPage(n);
             this.$("#todo-list").empty();
         },
         calculateTotal: function() {
-            var sum = Todos.where({ active: true }).reduce(function(acc, currValue){return +acc + +currValue.get("price") }, 0);
+            var sum = goods.where({ active: true }).reduce(function(acc, currValue){return +acc + +currValue.get("price") }, 0);
             $('.totalContainer').html("<h2>Total  " + sum + " $</h2>");
         },
         initialize: function() {
@@ -193,31 +198,31 @@ $(function() {
             this.input = this.$("#new-todo");
             this.allCheckbox = this.$("#toggle-all")[0];
 
-            this.listenTo(Todos, 'add', this.addOne);
-            this.listenTo(Todos, 'reset', this.addAll);
-            this.listenTo(Todos, 'all', this.render);
+            this.listenTo(goods, 'add', this.addOne);
+            this.listenTo(goods, 'reset', this.addAll);
+            this.listenTo(goods, 'all', this.render);
 
             this.footer = this.$('footer');
             this.main = $('#main');
 
-           Todos.fetch();
+           goods.fetch();
         },
         render: function() {
-            var active = Todos.active().length;
-            var remaining = Todos.remaining().length;
+            var active = goods.active().length;
+            var remaining = goods.remaining().length;
                 this.main.show();
                 this.footer.show();
                 this.footer.html(this.statsTemplate({ active: active, remaining: remaining }));
         },
-        addOne: function(todo) {
+        addOne: function(goodsModel) {
             console.log("add one func");
-            var view = new TodoView({ model: todo });
-            if(Todos.state.pageSize < Todos.length) return this;  // fixed items on page  
+            var view = new GoodsView({ model: goodsModel });
+            if(goods.state.pageSize < goods.length) return this;  // fixed items on page  
             this.$("#todo-list").append(view.render().el);
         },
-        showModal: function(todo) {
+        showModal: function(goodsModel) {
             console.log("show modal func");
-            var view = new TodoModal({ model: todo, type: "addNew" });
+            var view = new GoodsModal({ model: goodsModel, type: "addNew" });
             view.render().showModal({
                 x: 400,
                 y: 220
@@ -227,27 +232,27 @@ $(function() {
             // delete
         },
         clearCompleted: function() {
-            _.invoke(Todos.active(), 'destroy');
+            _.invoke(goods.active(), 'destroy');
             return false;
         },
         selectAll: function () {
-            Todos.each(function (todo) {
-                if(!todo.get("active"))
-                    todo.save({'active': true});
+            goods.each(function (goodsModel) {
+                if(!goodsModel.get("active"))
+                    goodsModel.save({'active': true});
             });
         },
         unselectAll: function (){
-            Todos.each(function (todo) {
-                if(todo.get("active"))
-                    todo.save({'active': false});
+            goods.each(function (goodsModel) {
+                if(goodsModel.get("active"))
+                    goodsModel.save({'active': false});
             });
         }
     });
 
 
-    var TodoModal = Backbone.ModalView.extend({
+    var GoodsModal = Backbone.ModalView.extend({
         name: "AddPersonView",
-        model: Todo,
+        model: Goods,
         params: "",
         templateHtml: $('#modal-template').html(),
         initialize: function(params) {
@@ -265,7 +270,7 @@ $(function() {
             //log 
             console.log(this.$("#name").val() + "   " + this.$("#price").val());
             if (this.params.type == "addNew") {
-                Todos.create({ name: this.$("#name").val(), price: this.$("#price").val() });
+                goods.create({ name: this.$("#name").val(), price: this.$("#price").val() });
                 this.$("form")[0].reset();
             }
             if (this.params.type == "change") {
