@@ -22,16 +22,13 @@
               <a id="usAll">unselect all</a>
             </div>
           </div> 
-          
+
           <div id="currPage"></div>
         <section id="main">
-            
             <ul id="goods-list"></ul>
         </section>
 
         <footer>
-            <a id="clear-completed">Clear deactivated</a>
-            <div id="goods-count"></div>
         </footer>
 
     </div>
@@ -50,24 +47,23 @@
     <script type="text/template" id="item-template">
         <div class="view">
             <input class="toggle" type="checkbox" <%= active ? 'checked="checked"' : '' %> />
-            <label> <%- name %></label>
-            <label> <%- price %>$</label>
+            <label class="nameOfGoods"> <%- name %></label>
+            <label class="priceOfGoods"> <%- price %>$</label>
             <a class="destroy"></a>
         </div>
-        <input class="edit" type="text" value="<%- name %>" />
     </script>
 
 
     <script type="text/template" id="stats-template">
         <div class="totalContainer">
-            <h2>Total</h2>
+               <h2>Total</h2>
         </div>
         <div class="pagGroup">
                 <button id="firstPage"><<</button>
                 <button id="prevPage"><</button>
-                <button id="page1">1</button>
-                <button id="page2">2</button>
-                <button id="page3">3</button>
+                <button id="pageNum">1</button>
+                <button id="pageNum">2</button>
+                <button id="pageNum">3</button>
                 <button id="nextPage">></button>
                 <button id="lastPage">>></button>
         </div>
@@ -76,11 +72,7 @@
             <button class="addBtn"  id="add-btn">Add</button>
             <button class="calcBtn" id="clc-btn">Sum</button>
         </div>
-        <% if (active) { %>
-            <a id="clear-completed">Clear <%= active %> deactivated <%= active == 1 ? 'good' : 'goods' %></a>
-            <% } %>
-                <div class="goods-count"><b><%= remaining %></b>
-                    <%= remaining == 1 ? 'good' : 'goods' %> in bucket</div>
+
     </script>
 
 

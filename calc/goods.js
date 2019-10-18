@@ -159,7 +159,6 @@ $(function() {
         
         events: {
             "click #clc-btn": "calculateTotal",
-            "click #clear-completed": "clearCompleted",
             "click #add-btn": "showModal",
             "click #sAll": "selectAll",
             "click #usAll": "unselectAll",
@@ -167,9 +166,7 @@ $(function() {
             "click #prevPage": "prevPage",
             "click #firstPage": "firstPage",
             "click #lastPage": "lastPage",
-            "click #page1" : "getPage",
-            "click #page2" : "getPage",
-            "click #page3" : "getPage"
+            "click #pageNum" : "getPage",
         },
         nextPage: function(){
             if(goods.hasNextPage()){
@@ -201,22 +198,18 @@ $(function() {
         },
         initialize: function() {
 
-            this.input = this.$("#new-goods");
-            this.allCheckbox = this.$("#toggle-all")[0];
+          
 
             this.listenTo(goods, 'add', this.addOne);
             this.listenTo(goods, 'reset', this.addAll);
             this.listenTo(goods, 'all', this.render);
 
             this.footer = this.$('footer');
-            this.main = $('#main');
-
            goods.fetch();
         },
         render: function() {
             var active = goods.active().length;
             var remaining = goods.remaining().length;
-            this.main.show();
             this.footer.show();
             this.footer.html(this.statsTemplate({ active: active, remaining: remaining }));
             $("#currPage").html("currentPage:  " + goods.state.currentPage);
@@ -234,10 +227,6 @@ $(function() {
                 x: 400,
                 y: 220
             });
-        },
-        clearCompleted: function() {
-            _.invoke(goods.active(), 'destroy');
-            return false;
         },
         selectAll: function () {
             goods.each(function (goodsModel) {

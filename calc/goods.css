@@ -4,6 +4,10 @@ body {
 	padding: 0;
 }
 
+* {
+	border-radius: 5px;
+}
+
 body {
 	font: 14px "Helvetica Neue", Helvetica, Arial, sans-serif;
 	line-height: 1.4em;
@@ -15,7 +19,7 @@ body {
 }
 
 #goodsapp {
-	background: #fff;
+	background: rgb(194, 238, 255);
 	padding: 20px;
 	margin-bottom: 40px;
 	-webkit-box-shadow: rgba(0, 0, 0, 0.2) 0 2px 6px 0;
@@ -35,30 +39,6 @@ body {
 	font-weight: bold;
 	text-align: center;
 	padding: 0 0 10px 0;
-}
-
-#goodsapp input[type="text"] {
-	width: 466px;
-	font-size: 24px;
-	font-family: inherit;
-	line-height: 1.4em;
-	border: 0;
-	outline: none;
-	padding: 6px;
-	border: 1px solid #999999;
-	-webkit-box-shadow: rgba(0, 0, 0, 0.2) 0 1px 2px 0 inset;
-	-moz-box-shadow: rgba(0, 0, 0, 0.2) 0 1px 2px 0 inset;
-	-ms-box-shadow: rgba(0, 0, 0, 0.2) 0 1px 2px 0 inset;
-	-o-box-shadow: rgba(0, 0, 0, 0.2) 0 1px 2px 0 inset;
-	box-shadow: rgba(0, 0, 0, 0.2) 0 1px 2px 0 inset;
-}
-
-#goodsapp input::-webkit-input-placeholder {
-	font-style: italic;
-}
-
-#main {
-	display: none;
 }
 
 #goods-list {
@@ -85,7 +65,7 @@ body {
 }
 
 #goods-list li.active {
-	background-color: #e0f99f;
+	background-color: #7eb2ff;
 }
 
 #goods-list .destroy {
@@ -120,7 +100,7 @@ body {
 	margin: 0 -20px -20px -20px;
 	overflow: hidden;
 	color: #555555;
-	background: #f4fce8;
+	background: #d0effc;
 	border-top: 1px solid #ededed;
 	padding: 0 20px;
 	line-height: 37px;
@@ -129,58 +109,6 @@ body {
 	-ms-border-radius: 0 0 5px 5px;
 	-o-border-radius: 0 0 5px 5px;
 	border-radius: 0 0 5px 5px;
-}
-
-#clear-completed {
-	float: right;
-	line-height: 20px;
-	text-decoration: none;
-	background: rgba(0, 0, 0, 0.1);
-	color: #555555;
-	font-size: 11px;
-	margin-top: 8px;
-	margin-bottom: 8px;
-	padding: 0 10px 1px;
-	cursor: pointer;
-	-webkit-border-radius: 12px;
-	-moz-border-radius: 12px;
-	-ms-border-radius: 12px;
-	-o-border-radius: 12px;
-	border-radius: 12px;
-	-webkit-box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 0 0;
-	-moz-box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 0 0;
-	-ms-box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 0 0;
-	-o-box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 0 0;
-	box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 0 0;
-}
-
-#clear-completed:hover {
-	background: rgba(0, 0, 0, 0.15);
-	-webkit-box-shadow: rgba(0, 0, 0, 0.3) 0 -1px 0 0;
-	-moz-box-shadow: rgba(0, 0, 0, 0.3) 0 -1px 0 0;
-	-ms-box-shadow: rgba(0, 0, 0, 0.3) 0 -1px 0 0;
-	-o-box-shadow: rgba(0, 0, 0, 0.3) 0 -1px 0 0;
-	box-shadow: rgba(0, 0, 0, 0.3) 0 -1px 0 0;
-}
-
-#clear-completed:active {
-	position: relative;
-	top: 1px;
-}
-
-#goods-count span {
-	font-weight: bold;
-}
-
-#instructions {
-	margin: 10px auto;
-	color: #777777;
-	text-shadow: rgba(255, 255, 255, 0.8) 0 1px 0;
-	text-align: center;
-}
-
-#instructions a {
-	color: #336699;
 }
 
 #invalid-error {
@@ -211,7 +139,7 @@ button {
 	color: white;
 	padding: 14px;
 	font-size: 14px;
-	border: none;
+	border-radius: 10px;
 	cursor: pointer;
   }
 
@@ -271,3 +199,29 @@ input[type="checkbox"]:hover {
 	background-color: #717ffd;
   }
 
+ .pagGroup{
+	display: flex;
+	justify-content: center;
+ }
+
+ .priceOfGoods {
+	 position: absolute;
+	 right: 30px;
+	 top: 25px;
+ }
+
+ .nameOfGoods {
+	 position: absolute;
+	 top: 25px;
+ }
+
+ .totalContainer > h2{
+	display: flex;
+	justify-content: flex-end;
+ }
+
+ .btnGroup{
+	margin: 10px 10px;
+	display: flex;
+	justify-content: flex-end;
+ }
