@@ -99,10 +99,6 @@ $(function() {
         remaining: function() {
             return this.where({ active: true });
         },
-        nextOrder: function() {
-            if (!this.length) return 1;
-            return this.last().get('order') + 1;
-        },
         comparator: 'order'
 
       });
@@ -154,7 +150,6 @@ $(function() {
         el: $("#goodsapp"),
         statsTemplate: _.template($('#stats-template').html()),
         events: {
-            "keypress #new-goods": "createOnEnter",
             "click #clc-btn": "calculateTotal",
             "click #clear-completed": "clearCompleted",
             "click #add-btn": "showModal",
@@ -228,9 +223,6 @@ $(function() {
                 x: 400,
                 y: 220
             });
-        },
-        createOnEnter: function(e) {
-            // delete
         },
         clearCompleted: function() {
             _.invoke(goods.active(), 'destroy');
