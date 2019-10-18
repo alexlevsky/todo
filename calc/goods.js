@@ -76,12 +76,11 @@ $(function() {
         state: {
           pageSize: 4,
           sortKey: "name",
-          order: 1
+          order: 1,
         },
         queryParams: {
           currentPage: "page",
           pageSize: "limit",
-          totalPages: 4
         },
         sync: function(method, model, options){
             console.log(model.get("order"));
@@ -99,12 +98,20 @@ $(function() {
         remaining: function() {
             return this.where({ active: true });
         },
+        initialize: function(){
+            var self = this;
+            this.on("request", function(){
+                $.get(mockBaseUrl, function(data){
+                    self.state.lastPage =  Math.ceil( data.length / self.state.pageSize);  
+                });
+            })
+        },
         comparator: 'order'
 
       });
 
         
-        var goods = new GoodsList();  
+      var goods = new GoodsList();  
       console.log( goods )  
 
     var GoodsView = Backbone.View.extend({
@@ -149,6 +156,7 @@ $(function() {
     var AppView = Backbone.View.extend({
         el: $("#goodsapp"),
         statsTemplate: _.template($('#stats-template').html()),
+        
         events: {
             "click #clc-btn": "calculateTotal",
             "click #clear-completed": "clearCompleted",
@@ -159,13 +167,15 @@ $(function() {
             "click #prevPage": "prevPage",
             "click #firstPage": "firstPage",
             "click #lastPage": "lastPage",
-            "click #page1" : "getPage(1)",
-            "click #page2" : "getPage(2)",
-            "click #page3" : "getPage(3)"
+            "click #page1" : "getPage",
+            "click #page2" : "getPage",
+            "click #page3" : "getPage"
         },
         nextPage: function(){
+            if(goods.hasNextPage()){
                 goods.getNextPage();
                 this.$("#goods-list").empty();
+            }
         },
         prevPage: function(){
             if(goods.hasPreviousPage()){
@@ -181,9 +191,9 @@ $(function() {
             goods.getLastPage();
             this.$("#goods-list").empty();
         },
-        getPage: function(n){
-            goods.getPage(n);
-            this.$("#goods-list").empty();
+        getPage: function(e){
+          goods.getPage(parseInt(e.srcElement.innerHTML));
+          this.$("#goods-list").empty();
         },
         calculateTotal: function() {
             var sum = goods.where({ active: true }).reduce(function(acc, currValue){return +acc + +currValue.get("price") }, 0);
@@ -206,9 +216,10 @@ $(function() {
         render: function() {
             var active = goods.active().length;
             var remaining = goods.remaining().length;
-                this.main.show();
-                this.footer.show();
-                this.footer.html(this.statsTemplate({ active: active, remaining: remaining }));
+            this.main.show();
+            this.footer.show();
+            this.footer.html(this.statsTemplate({ active: active, remaining: remaining }));
+            $("#currPage").html("currentPage:  " + goods.state.currentPage);
         },
         addOne: function(goodsModel) {
             console.log("add one func");

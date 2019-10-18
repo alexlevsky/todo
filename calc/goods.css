@@ -229,6 +229,10 @@ input[type="checkbox"]:hover {
 	background-color: #ccc;
 }
 
+#currPage {
+	font-size: 18px;
+	float: right;
+}
   
   /* The container <div> - needed to position the dropdown content */
   .dropdown {
