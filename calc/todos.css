@@ -189,6 +189,12 @@ body {
 	font-size: 14px;
 }
 
+#success-save {
+	color: green;
+	text-align: center;
+	font-size: 14px;
+}
+
 .btnGroup {
  /*	background-color: green;  */
 	width: 50%; 

@@ -1,6 +1,6 @@
 $(function() {
     // change it if you change mock api endpoint
-    var mockBaseUrl = "https://5d668943520e1b00141ee3bd.mockapi.io/api/todo/";
+    var mockBaseUrl = "https://5d668943520e1b00141ee3bd.mockapi.io/api/goods/";
 
     var Goods = Backbone.Model.extend({
         defaults: function() {
@@ -11,14 +11,11 @@ $(function() {
             };
         },
         initialize: function() {
-            if (this.isValid() == true) {
-                $("#invalid-error").hide();
-            } else {
-                $("#invalid-error").show();
-            }
+           
             // log events
             this.on("change", function() {
                 console.log("Model has been changed !");
+                this.validateMessage(); 
             })
             this.on("add", function(){
                 console.log("Model has been created ");
@@ -52,7 +49,23 @@ $(function() {
             this.save({ active: !this.get("active") });
         },
         validate: function(attrs) {
-            if (!attrs.name.trim() || attrs.price < 0) return "invalid value";
+            if (!attrs.name.trim() || attrs.price < 0){
+                 console.error("invalid error, model don't save");
+                 return "invalid value";
+            }
+        },
+        validateMessage: function(){
+            if (this.isValid() == true) {
+                $("#invalid-error").hide();
+                $("#success-save").show();
+            } else {
+                $("#invalid-error").show();
+                $("#success-save").hide();
+            }
+            setTimeout(function(){
+                $("#invalid-error").hide();
+                $("#success-save").hide();
+            }, 1000)
         }
     });
 
@@ -73,10 +86,10 @@ $(function() {
         sync: function(method, model, options){
             console.log(model.get("order"));
             switch(method){
-                case "read": options.url =   mockBaseUrl;  break; 
-                case "update": options.url = mockBaseUrl + model.get("order"); break; 
+                case   "read": options.url = mockBaseUrl;                       break; 
+                case "update": options.url = mockBaseUrl + model.get("order");  break; 
                 case "delete": options.url = mockBaseUrl + model.get("order");  break; 
-                case "create": options.url = mockBaseUrl; break; 
+                case "create": options.url = mockBaseUrl;                       break; 
             }
             return Backbone.sync(method, model, options);
         },
@@ -113,6 +126,7 @@ $(function() {
             this.listenTo(this.model, 'destroy', this.remove);
         },
         render: function() {
+            if(this.model.isValid() == false) return this; 
             this.$el.html(this.template(this.model.toJSON()));
             this.$el.toggleClass('active', this.model.get('active'));
             this.input = this.$('.edit');

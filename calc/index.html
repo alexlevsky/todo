@@ -85,7 +85,7 @@
 
     <script type="text/template" id="modal-template">
         <div class='modalContainer'>
-            <div class='modal-header'>Add a new good to the list</div>
+            <div class='modal-header'>Add a new goods to the list</div>
             <form>
                 <table class='compact'>
                     <tr>
@@ -109,7 +109,8 @@
                         <td>
                             <input id='addGoodBtn' type='submit' value='Save' />
                             <input id='cancelBtn' type='button' value='Cancel' />
-                            <div id="invalid-error">Error: invalid value, model don`t save</div>
+                            <div id="invalid-error" class="hidden">Error: invalid value, model don`t save</div>
+                            <div id="success-save" class="hidden">Model save successful</div>
                         </td>
                     </tr>
                 </table>
