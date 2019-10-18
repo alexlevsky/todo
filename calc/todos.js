@@ -1,4 +1,6 @@
 $(function() {
+    // change it if you change mock api endpoint
+    var mockBaseUrl = "https://5d668943520e1b00141ee3bd.mockapi.io/api/todo/";
 
     var Goods = Backbone.Model.extend({
         defaults: function() {
@@ -34,17 +36,17 @@ $(function() {
         sync: function(method, model, options){
             console.log(model.get("order"));
             switch(method){
-                case "read": options.url   = "https://5d668943520e1b00141ee3bd.mockapi.io/api/todo/";  break; 
-                case "update": options.url = "https://5d668943520e1b00141ee3bd.mockapi.io/api/todo/" + model.get("order"); break; 
-                case "delete": options.url = "https://5d668943520e1b00141ee3bd.mockapi.io/api/todo/" + model.get("order");  break; 
-                case "create": options.url = "https://5d668943520e1b00141ee3bd.mockapi.io/api/todo/"; break; 
+                case "read"  : options.url   = mockBaseUrl;                     break; 
+                case "update": options.url = mockBaseUrl + model.get("order");  break; 
+                case "delete": options.url = mockBaseUrl + model.get("order");  break; 
+                case "create": options.url = mockBaseUrl;                       break; 
             }
             return Backbone.sync(method, model, options);
         },
         urlRoot: function(){
-          return "https://5d668943520e1b00141ee3bd.mockapi.io/api/todo/"  
+          return mockBaseUrl 
         },
-         url: "https://5d668943520e1b00141ee3bd.mockapi.io/api/todo/",
+         url: mockBaseUrl,
 
         toggle: function() {
             this.save({ active: !this.get("active") });
@@ -55,7 +57,7 @@ $(function() {
     });
 
     var GoodsList = Backbone.PageableCollection.extend({
-        url: "https://5d668943520e1b00141ee3bd.mockapi.io/api/todo",
+        url: mockBaseUrl,
         model: Goods,
         mode: "server",
         state: {
@@ -71,10 +73,10 @@ $(function() {
         sync: function(method, model, options){
             console.log(model.get("order"));
             switch(method){
-                case "read": options.url = "https://5d668943520e1b00141ee3bd.mockapi.io/api/todo/";  break; 
-                case "update": options.url = "https://5d668943520e1b00141ee3bd.mockapi.io/api/todo/" + model.get("order"); break; 
-                case "delete": options.url = "https://5d668943520e1b00141ee3bd.mockapi.io/api/todo/" + model.get("order");  break; 
-                case "create": options.url = "https://5d668943520e1b00141ee3bd.mockapi.io/api/todo/"; break; 
+                case "read": options.url =   mockBaseUrl;  break; 
+                case "update": options.url = mockBaseUrl + model.get("order"); break; 
+                case "delete": options.url = mockBaseUrl + model.get("order");  break; 
+                case "create": options.url = mockBaseUrl; break; 
             }
             return Backbone.sync(method, model, options);
         },
@@ -95,7 +97,6 @@ $(function() {
         
         var goods = new GoodsList();  
       console.log( goods )  
-      Backbone.history.start()
 
     var GoodsView = Backbone.View.extend({
         tagName: "li",
@@ -141,7 +142,7 @@ $(function() {
         },
         clear: function() {
             this.model.destroy();
-            $("#todo-list").empty();
+            $("#goods-list").empty();
             setTimeout(function(){
                     goods.fetch();
             }, 170);
@@ -150,10 +151,10 @@ $(function() {
     });
 
     var AppView = Backbone.View.extend({
-        el: $("#todoapp"),
+        el: $("#goodsapp"),
         statsTemplate: _.template($('#stats-template').html()),
         events: {
-            "keypress #new-todo": "createOnEnter",
+            "keypress #new-goods": "createOnEnter",
             "click #clc-btn": "calculateTotal",
             "click #clear-completed": "clearCompleted",
             "click #add-btn": "showModal",
@@ -169,25 +170,25 @@ $(function() {
         },
         nextPage: function(){
                 goods.getNextPage();
-                this.$("#todo-list").empty();
+                this.$("#goods-list").empty();
         },
         prevPage: function(){
             if(goods.hasPreviousPage()){
                 goods.getPreviousPage();
-                this.$("#todo-list").empty();
+                this.$("#goods-list").empty();
             }
         },
         firstPage: function(){
             goods.getFirstPage();
-            this.$("#todo-list").empty();
+            this.$("#goods-list").empty();
         },
         lastPage: function(){
             goods.getLastPage();
-            this.$("#todo-list").empty();
+            this.$("#goods-list").empty();
         },
         getPage: function(n){
             goods.getPage(n);
-            this.$("#todo-list").empty();
+            this.$("#goods-list").empty();
         },
         calculateTotal: function() {
             var sum = goods.where({ active: true }).reduce(function(acc, currValue){return +acc + +currValue.get("price") }, 0);
@@ -195,7 +196,7 @@ $(function() {
         },
         initialize: function() {
 
-            this.input = this.$("#new-todo");
+            this.input = this.$("#new-goods");
             this.allCheckbox = this.$("#toggle-all")[0];
 
             this.listenTo(goods, 'add', this.addOne);
@@ -218,7 +219,7 @@ $(function() {
             console.log("add one func");
             var view = new GoodsView({ model: goodsModel });
             if(goods.state.pageSize < goods.length) return this;  // fixed items on page  
-            this.$("#todo-list").append(view.render().el);
+            this.$("#goods-list").append(view.render().el);
         },
         showModal: function(goodsModel) {
             console.log("show modal func");
