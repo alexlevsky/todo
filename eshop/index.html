@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Goods manager</title>
+    <link rel="stylesheet" href="../lib/bootstrap.min.css" />
+    <link rel="stylesheet" href="goods.css" />
+</head>
+
+<body>
+        <a class="btn btn-link" href="#goods" role="button">Goods</a>
+        <a class="btn btn-link" href="#cart" role="button">Cart</a>
+        <a class="btn btn-link" href="#registration" role="button">Registration</a>
+        <a class="btn btn-link" href="#login" role="button">Login</a>
+        <a class="btn btn-link" href="#logout" role="button">Logout</a>
+        <a class="btn btn-link" href="*random" role="button">404</a>
+
+    <div id="goodsapp">
+
+        <header>
+            <h1>List of Goods</h1>
+        </header>
+
+        <div class="dropdown">
+            <button class="dropbtn">Select</button>
+            <div class="dropdown-content">
+              <a id="sAll">select all</a>
+              <a id="usAll">unselect all</a>
+            </div>
+          </div> 
+
+          
+
+          <h2 id="currPage"></h2>
+        <section id="main">
+            <ul id="goods-list"></ul>
+        </section>
+
+        <footer>
+        </footer>
+
+    </div>
+
+    <script src="../lib/json2.js"></script>
+    <script src="../lib/jquery-3.0.0.min.js"></script>
+    <script src="../lib/underscore.js"></script>
+    <script src="../lib/backbone.js"></script>
+    <script src="../lib/backbone.localStorage.js"></script>
+    <script src="../lib/Backbone.ModalDialog.js"></script>
+    <script src="../lib/backbone.paginator.js"></script>
+    <script src="../lib/bootstrap.min.js"></script>
+    <script src="goods.js"></script>
+
+    <!-- Templates -->
+
+    <script type="text/template" id="item-template">
+        <div class="view">
+            <input class="toggle" type="checkbox" <%= active ? 'checked="checked"' : '' %> />
+            <label  class="nameOfGoods"> <%- name %></label>
+            <label  class="priceOfGoods"> <%- price %>$</label>
+            <a class="destroy"></a>
+        </div>
+    </script>
+
+
+    <script type="text/template" id="stats-template">
+        <div class="totalContainer">
+               <h2>Total</h2>
+        </div>
+        <div class="pagGroup">
+                <button id="firstPage"><<</button>
+                <button id="prevPage"><</button>
+                <button id="pageNum">1</button>
+                <button id="pageNum">2</button>
+                <button id="pageNum">3</button>
+                <button id="nextPage">></button>
+                <button id="lastPage">>></button>
+        </div>
+            
+        <div class="btnGroup">
+            <button class="addBtn"  id="add-btn">Add</button>
+            <button class="calcBtn" id="clc-btn">Sum</button>
+        </div>
+
+    </script>
+
+
+    <div class="login"></div>
+    <script type="text/template" id="login-template">
+        <form>
+            <h2>Login</h2>
+            <div class="form-group">
+              <label for="exampleInputEmail1">Username</label>
+              <input type="text" class="form-control" placeholder="Username">
+            </div>
+            <div class="form-group">
+              <label for="exampleInputPassword1">Password</label>
+              <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </script>
+
+    <div class="registration"></div>
+    <script type="text/template" id="registration-template">
+        <form>
+            <h2>Registration</h2>
+            <div class="form-group">
+              <label for="exampleInputEmail1">Username</label>
+              <input type="text" class="form-control" placeholder="Username">
+            </div>
+            <div class="form-group">
+              <label for="exampleInputPassword1">Password</label>
+              <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </script>
+
+
+    <script type="text/template" id="modal-template">
+        <div class='modalContainer'>
+            <div class='modal-header'>Add a new goods to the list</div>
+            <form>
+                <table class='compact'>
+                    <tr>
+                        <td>
+                            <label for='name'>Name</label>
+                        </td>
+                        <td>
+                            <input type='text' id='name' />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for='price'>price</label>
+                        </td>
+                        <td>
+                            <input type='number' id='price' />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <input id='addGoodBtn' type='submit' value='Save' />
+                            <input id='cancelBtn' type='button' value='Cancel' />
+                            <div id="invalid-error" class="hidden">Error: invalid value, model don`t save</div>
+                            <div id="success-save" class="hidden">Model save successful</div>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </script>
+
+</body>
+
+</html>
