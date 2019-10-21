@@ -319,10 +319,12 @@ $(function() {
             new RegistrationView();
         },
         goods: function(id) {
+            var App = new AppView();
             console.log("goods router" + id);
         },
         cart: function() {
             console.log("cart router");
+            new CartView();
         },
         notFound: function(){
             console.log("url not found 404 error");
@@ -351,8 +353,17 @@ $(function() {
         }
     })
 
+    var CartView = Backbone.View.extend({
+        render: function(){
+            $(".cart").append( $("#cart-template").html());
+        },
+        initialize: function(){
+            this.render();
+        }
+    })
 
-    var App = new AppView;
+
+    
 
     var router = new myRouter();
       
