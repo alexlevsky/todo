@@ -1,41 +1,26 @@
 $(function() {
     // change it if you change mock api endpoint
-    var mockBaseUrl = "https://5d668943520e1b00141ee3bd.mockapi.io/api/goods/";
+    var mockBaseUrl = "https://5d668943520e1b00141ee3bd.mockapi.io/api/goods2/";
 
     var Goods = Backbone.Model.extend({
         defaults: function() {
             return {
-                name: "default good",
+                title: "default good",
                 price: 0,
-                active: true
+                description: "default description",
             };
         },
         initialize: function() {
-             this.validateMessage();
-            // log events
-            this.on("change", function() {
-                console.log("Model has been changed !");
-                this.validateMessage(); 
-            })
-            this.on("add", function(){
-                console.log("Model has been created ");
-            })
-            this.on("destroy", function(){
-                console.log("Model has been deleted ");
-            })
-            this.on("change:active", function(){
-                console.log("Change active  checkbox");
-            })
+
         },
         isNew(){
-           return this.get("order") ? false : true;
+           return this.get("id") ? false : true;
         },
         sync: function(method, model, options){
-            console.log(model.get("order"));
             switch(method){
                 case "read"  : options.url   = mockBaseUrl;                     break; 
-                case "update": options.url = mockBaseUrl + model.get("order");  break; 
-                case "delete": options.url = mockBaseUrl + model.get("order");  break; 
+                case "update": options.url = mockBaseUrl + model.get("id");  break; 
+                case "delete": options.url = mockBaseUrl + model.get("id");  break; 
                 case "create": options.url = mockBaseUrl;                       break; 
             }
             return Backbone.sync(method, model, options);
@@ -43,40 +28,17 @@ $(function() {
         urlRoot: function(){
           return mockBaseUrl 
         },
-         url: mockBaseUrl,
-
-        toggle: function() {
-            this.save({ active: !this.get("active") });
-        },
-        validate: function(attrs) {
-            if (!attrs.name.trim() || attrs.price < 0){
-                 console.error("invalid error, model don't save");
-                 return "invalid value";
-            }
-        },
-        validateMessage: function(){
-            if (this.isValid() == true) {
-                $("#invalid-error").hide();
-                $("#success-save").show();
-            } else {
-                $("#invalid-error").show();
-                $("#success-save").hide();
-            }
-            setTimeout(function(){
-                $("#invalid-error").hide();
-                $("#success-save").hide();
-            }, 1000)
-        }
+         url: mockBaseUrl
     });
 
     var GoodsList = Backbone.PageableCollection.extend({
         url: mockBaseUrl,
         model: Goods,
         mode: "server",
-        comparator: 'order',
+        comparator: 'id',
         state: {
           pageSize: 4,
-          sortKey: "name",
+          sortKey: "title",
           order: 1,
         },
         queryParams: {
@@ -84,20 +46,13 @@ $(function() {
           pageSize: "limit",
         },
         sync: function(method, model, options){
-            console.log(model.get("order"));
             switch(method){
                 case   "read": options.url = mockBaseUrl;                       break; 
-                case "update": options.url = mockBaseUrl + model.get("order");  break; 
-                case "delete": options.url = mockBaseUrl + model.get("order");  break; 
+                case "update": options.url = mockBaseUrl + model.get("id");  break; 
+                case "delete": options.url = mockBaseUrl + model.get("id");  break; 
                 case "create": options.url = mockBaseUrl;                       break; 
             }
             return Backbone.sync(method, model, options);
-        },
-        active: function() {
-            return this.where({ active: false });
-        },
-        remaining: function() {
-            return this.where({ active: true });
         },
         initialize: function(){
             var self = this;
@@ -116,39 +71,13 @@ $(function() {
         tagName: "li",
         template: _.template($('#item-template').html()),
         events: {
-            "click .toggle"   : "toggleActive",
-            "dblclick .view"  : "edit",
-            "click a.destroy" : "clear",
         },
         initialize: function() {
-            this.listenTo(this.model, 'change', this.render);
-            this.listenTo(this.model, 'destroy', this.remove);
         },
         render: function() {
-            if(this.model.isValid() == false) return this; 
             this.$el.html(this.template(this.model.toJSON()));
-            this.$el.toggleClass('active', this.model.get('active'));
-            this.input = this.$('.edit');
             return this;
-        },
-        toggleActive: function() {
-            this.model.toggle();
-        },
-        edit: function() {
-            var view = new GoodsModal({ model: this.model, type: "change" });
-            view.render().showModal({
-                x: 400,
-                y: 220
-            });
-        },
-        clear: function() {
-            this.model.destroy();
-            $("#goods-list").empty();
-            setTimeout(function(){
-                    goods.fetch();
-            }, 170);
         }
-
     });
 
     var AppView = Backbone.View.extend({
@@ -156,10 +85,6 @@ $(function() {
         statsTemplate: _.template($('#stats-template').html()),
         
         events: {
-            "click #clc-btn": "calculateTotal",
-            "click #add-btn": "showModal",
-            "click #sAll": "selectAll",
-            "click #usAll": "unselectAll",
             "click #nextPage": "nextPage",
             "click #prevPage": "prevPage",
             "click #firstPage": "firstPage",
@@ -190,33 +115,11 @@ $(function() {
           goods.getPage(parseInt(e.srcElement.innerHTML));
           this.$("#goods-list").empty();
         },
-        calculateTotal: function() {
-            $.get(mockBaseUrl, function(data){
-
-                var sum = $.grep(data, function(d){
-                    return d.active == true;
-
-                })
-                .reduce(function(acc, currValue){
-                    return +acc +  +currValue.price
-                }, 0);
-
-                $('.totalContainer').html("<h2>Total  " + sum + " $</h2>"); 
-            });  
-        },
         initialize: function() {
             this.listenTo(goods, 'add', this.addOne);
-            this.listenTo(goods, 'reset', this.addAll);
             this.listenTo(goods, 'all', this.render);
             this.footer = this.$('footer');
            goods.fetch();
-        },
-        render: function() {
-            var active = goods.active().length;
-            var remaining = goods.remaining().length;
-            this.footer.show();
-            this.footer.html(this.statsTemplate({ active: active, remaining: remaining }));
-            $("#currPage").html("currentPage:  " + goods.state.currentPage);
         },
         addOne: function(goodsModel) {
             console.log("add one func");
@@ -224,76 +127,11 @@ $(function() {
             if(goods.state.pageSize < goods.length) return this;  // fixed items on page  
             this.$("#goods-list").append(view.render().el);
         },
-        showModal: function(goodsModel) {
-            console.log("show modal func");
-            var view = new GoodsModal({ model: goodsModel, type: "addNew" });
-            view.render().showModal({
-                x: 400,
-                y: 220
-            });
-        },
-        selectAll: function () {
-            goods.each(function (goodsModel) {
-                if(!goodsModel.get("active"))
-                    goodsModel.save({'active': true});
-            });
-        },
-        unselectAll: function (){
-            goods.each(function (goodsModel) {
-                if(goodsModel.get("active"))
-                    goodsModel.save({'active': false});
-            });
+        render: function() {
+            this.footer.show();
+            this.footer.html(this.statsTemplate());
         }
     });
-
-
-    var GoodsModal = Backbone.ModalView.extend({
-        name: "AddPersonView",
-        model: Goods,
-        params: "",
-        templateHtml: $('#modal-template').html(),
-        initialize: function(params) {
-            this.params = params;
-            _.bindAll(this, "render");
-            this.template = _.template(this.templateHtml);
-        },
-        events: {
-            "submit form": "save",
-            "click #cancelBtn": "cancel"
-        },
-        save: function(event) {
-            event.preventDefault();
-            if (!this.$("#name").val() && !this.$("#price").val()) return;
-            //log 
-            console.log(this.$("#name").val() + "   " + this.$("#price").val());
-            if (this.params.type == "addNew") {
-                goods.create({ name: this.$("#name").val(),
-                               price: this.$("#price").val(),
-                               active: true
-                             });
-                this.$("form")[0].reset();
-            }
-            if (this.params.type == "change") {
-                this.model.set("name", this.$("#name").val()  );
-                this.model.set("price",this.$("#price").val() );
-                this.model.save();
-            }
-
-        },
-        cancel: function() {
-            this.hideModal();
-        },
-        render: function() {
-           $(this.el).html(this.template());
-            console.log(this.params.type);
-            if (this.params.type == "change") {
-                this.$("#name").val(this.model.attributes.name);
-                this.$("#price").val(this.model.attributes.price);
-            }
-            return this;
-        }
-    })
-
 
     var myRouter = Backbone.Router.extend({
         routes: {

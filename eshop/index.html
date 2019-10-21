@@ -18,21 +18,6 @@
 
     <div id="goodsapp">
 
-        <header>
-            <h1>List of Goods</h1>
-        </header>
-
-        <div class="dropdown">
-            <button class="dropbtn">Select</button>
-            <div class="dropdown-content">
-              <a id="sAll">select all</a>
-              <a id="usAll">unselect all</a>
-            </div>
-          </div> 
-
-          
-
-          <h2 id="currPage"></h2>
         <section id="main">
             <ul id="goods-list"></ul>
         </section>
@@ -47,7 +32,6 @@
     <script src="../lib/underscore.js"></script>
     <script src="../lib/backbone.js"></script>
     <script src="../lib/backbone.localStorage.js"></script>
-    <script src="../lib/Backbone.ModalDialog.js"></script>
     <script src="../lib/backbone.paginator.js"></script>
     <script src="../lib/bootstrap.min.js"></script>
     <script src="goods.js"></script>
@@ -56,18 +40,13 @@
 
     <script type="text/template" id="item-template">
         <div class="view">
-            <input class="toggle" type="checkbox" <%= active ? 'checked="checked"' : '' %> />
-            <label  class="nameOfGoods"> <%- name %></label>
+            <label  class="nameOfGoods"> <%- title %></label>
             <label  class="priceOfGoods"> <%- price %>$</label>
-            <a class="destroy"></a>
         </div>
     </script>
 
 
     <script type="text/template" id="stats-template">
-        <div class="totalContainer">
-               <h2>Total</h2>
-        </div>
         <div class="pagGroup">
                 <button id="firstPage"><<</button>
                 <button id="prevPage"><</button>
@@ -78,11 +57,6 @@
                 <button id="lastPage">>></button>
         </div>
             
-        <div class="btnGroup">
-            <button class="addBtn"  id="add-btn">Add</button>
-            <button class="calcBtn" id="clc-btn">Sum</button>
-        </div>
-
     </script>
 
 
@@ -129,40 +103,6 @@
         </ul>
     </script>
 
-    <script type="text/template" id="modal-template">
-        <div class='modalContainer'>
-            <div class='modal-header'>Add a new goods to the list</div>
-            <form>
-                <table class='compact'>
-                    <tr>
-                        <td>
-                            <label for='name'>Name</label>
-                        </td>
-                        <td>
-                            <input type='text' id='name' />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label for='price'>price</label>
-                        </td>
-                        <td>
-                            <input type='number' id='price' />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td>
-                            <input id='addGoodBtn' type='submit' value='Save' />
-                            <input id='cancelBtn' type='button' value='Cancel' />
-                            <div id="invalid-error" class="hidden">Error: invalid value, model don`t save</div>
-                            <div id="success-save" class="hidden">Model save successful</div>
-                        </td>
-                    </tr>
-                </table>
-            </form>
-        </div>
-    </script>
 
 </body>
 
