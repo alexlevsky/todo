@@ -31,6 +31,68 @@ $(function() {
          url: mockBaseUrl
     });
 
+    var CartList = Backbone.Collection.extend({
+        model: Goods,
+        localStorage: new Backbone.LocalStorage("cart-list"),
+        comparator: 'id',
+        nextOrder: function() {
+            if (!this.length) return 1;
+            return this.last().get('id') + 1;
+          }
+    });
+
+     var carts = new CartList();
+     carts.add({ id: 7, title: "some title", price: 12});
+     console.log( carts );
+
+
+    var CartItemView = Backbone.View.extend({
+        tagName: "li",
+        template: _.template($('#cart-item-template').html()),
+        events: {
+         "click a.destroy" : "clear"
+        },
+        initialize: function() {
+            this.listenTo(this.model, 'change', this.render);
+            this.listenTo(this.model, 'destroy', this.remove);
+            this.render()
+          },
+          render: function() {
+            this.$el.html(this.template(this.model.toJSON()));
+            return this;
+          },
+          clear: function() {
+            this.model.destroy();
+          }
+    })
+ 
+  var cartview = new CartView(carts);  
+   var CartView = Backbone.View.extend({
+    el: $("cart-template"), 
+    template: _.template($("#cart-template").html()),
+    render: function(){
+       // console.log($("#cart-template").html())
+        $(".cart").append(this.template);
+    },
+    initialize: function(){
+        this.listenTo(carts, 'add', this.addOne);
+        this.listenTo(carts, 'all', this.render);
+        carts.fetch();
+    },
+    addOne: function(cart) {
+        var view = new CartItemView({model: cart});
+        console.log($("#cart-template").html());
+        this.$("#cart-list").append(view.render().el);
+      }
+})
+
+
+ 
+
+
+   
+
+
     var GoodsList = Backbone.PageableCollection.extend({
         url: mockBaseUrl,
         model: Goods,
@@ -191,14 +253,7 @@ $(function() {
         }
     })
 
-    var CartView = Backbone.View.extend({
-        render: function(){
-            $(".cart").append( $("#cart-template").html());
-        },
-        initialize: function(){
-            this.render();
-        }
-    })
+   
 
 
     
