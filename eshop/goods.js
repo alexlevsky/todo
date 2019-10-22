@@ -1,6 +1,7 @@
 $(function() {
     // change it if you change mock api endpoint
     var mockBaseUrl = "https://5d668943520e1b00141ee3bd.mockapi.io/api/goods2/";
+    var usersUrl = "https://5d668943520e1b00141ee3bd.mockapi.io/api/users";
 
     var Goods = Backbone.Model.extend({
         defaults: function() {
@@ -18,7 +19,7 @@ $(function() {
         },
         sync: function(method, model, options){
             switch(method){
-                case "read"  : options.url   = mockBaseUrl;                     break; 
+                case "read"  : options.url = mockBaseUrl;                     break; 
                 case "update": options.url = mockBaseUrl + model.get("id");  break; 
                 case "delete": options.url = mockBaseUrl + model.get("id");  break; 
                 case "create": options.url = mockBaseUrl;                       break; 
@@ -31,6 +32,39 @@ $(function() {
          url: mockBaseUrl
     });
 
+
+    var User = new Backbone.Model.extend({
+        defaults: function() {
+            return {
+                username: "default username",
+                password: "default password",
+                isAuth: false
+            };
+        },
+        isNew(){
+            return this.get("id") ? false : true;
+        },
+        url: usersUrl,
+        urlRoot: function(){
+            return usersUrl 
+        },
+        sync: function(method, model, options){
+            switch(method){
+                case "read"  : options.url = usersUrl;                    break; 
+                case "update": options.url = usersUrl + model.get("id");  break; 
+                case "delete": options.url = usersUrl + model.get("id");  break; 
+                case "create": options.url = usersUrl;                    break; 
+            }
+            return Backbone.sync(method, model, options);
+        }
+    })
+
+    var UserList = new Backbone.Collection.extend({
+        url: usersUrl,
+        model: User,
+        
+    })
+
     var CartList = Backbone.Collection.extend({
         model: Goods,
         localStorage: new Backbone.LocalStorage("cart-list"),
@@ -42,52 +76,53 @@ $(function() {
     });
 
      var carts = new CartList();
-     carts.add({ id: 7, title: "some title", price: 12});
-     console.log( carts );
+     carts.fetch();
 
 
-    var CartItemView = Backbone.View.extend({
-        tagName: "li",
-        template: _.template($('#cart-item-template').html()),
-        events: {
-         "click a.destroy" : "clear"
-        },
-        initialize: function() {
-            this.listenTo(this.model, 'change', this.render);
-            this.listenTo(this.model, 'destroy', this.remove);
-            this.render()
-          },
-          render: function() {
-            this.$el.html(this.template(this.model.toJSON()));
-            return this;
-          },
-          clear: function() {
-            this.model.destroy();
-          }
-    })
- 
-  var cartview = new CartView(carts);  
-   var CartView = Backbone.View.extend({
-    el: $("cart-template"), 
-    template: _.template($("#cart-template").html()),
+var CartView = Backbone.View.extend({
+     el: $("#cart-list"), 
+    // tagName: 'ul',
+    // template: _.template($("#cart-template").html()),
+    events: {
+        "click a.destroy" : "clear",
+    },
     render: function(){
-       // console.log($("#cart-template").html())
-        $(".cart").append(this.template);
+    var view = "";
+    $("#cart-list").empty();
+        carts.each(function(model){
+            view = "<li class='list-group-item' id='" +  model.get("id")  +  "'>" +
+             "<label class='title'>"  + model.get("title") + "</label>" +
+             "<label class='price'>"  + model.get("price") + " $ </label>" +
+             "<a class='destroy'></a>" +
+             "</li>"; 
+          //  console.log($('ul.list-group'));
+            $("ul.list-group").append(view);
+        })
+        $("ul.list-group").append("<h3 class='total'>Total " + this.calculateTotal() + " $</h3>");
+        return this;
     },
     initialize: function(){
-        this.listenTo(carts, 'add', this.addOne);
-        this.listenTo(carts, 'all', this.render);
-        carts.fetch();
+        this.listenTo(carts, 'add', this.render);
+      //  this.listenTo(carts, 'remove', this.remove);
+        this.render();
+        return this;
     },
-    addOne: function(cart) {
-        var view = new CartItemView({model: cart});
-        console.log($("#cart-template").html());
-        this.$("#cart-list").append(view.render().el);
-      }
+    calculateTotal: function(){
+        var sum = 0;
+        carts.each(function(model){
+            sum += parseInt(model.get("price"));
+        })
+        return sum;
+    },
+    clear: function(e) {
+        var model =  carts.get(e.currentTarget.parentElement.id)
+        model.destroy();
+        this.render();
+        console.log(carts)
+    }  
 })
 
-
- 
+// var fc = new CartView();
 
 
    
@@ -133,8 +168,17 @@ $(function() {
         tagName: "li",
         template: _.template($('#item-template').html()),
         events: {
+            "click #addToCart": "addToCart"
         },
         initialize: function() {
+
+        },
+        addToCart: function(){
+          //  console.log(this.model.get("title"))
+            carts.create({ 
+                title: this.model.get("title"), 
+                price: this.model.get("price")
+             }); 
         },
         render: function() {
             this.$el.html(this.template(this.model.toJSON()));

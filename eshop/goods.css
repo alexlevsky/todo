@@ -69,7 +69,7 @@ body {
 	background-color: #7eb2ff;
 }
 
-#goods-list .destroy {
+#cart-list .destroy {
 	position: absolute;
 	right: 5px;
 	top: 20px;
@@ -80,11 +80,11 @@ body {
 	background: url(destroy.png) no-repeat;
 }
 
-#goods-list li:hover .destroy {
+#cart-list li:hover .destroy {
   	display: block;
 }
 
-#goods-list .destroy:hover {
+#cart-list .destroy:hover {
   	background-position: 0 -20px;
 }
 
@@ -198,6 +198,11 @@ button {
 
  .btnGroup{
 	margin: 10px 10px;
+	display: flex;
+	justify-content: flex-end;
+ }
+
+ .price {
 	display: flex;
 	justify-content: flex-end;
  }

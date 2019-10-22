@@ -47,7 +47,7 @@
                     <div class="card-body">
                       <h5 class="card-title"><%- title %></h5>
                       <p class="card-text"><%- price %> $</p>
-                      <button type="button" class="btn btn-primary">buy</button>
+                      <button type="button" class="btn btn-primary" id="addToCart">buy</button>
                     </div>
                   </div>
         </div>
@@ -100,22 +100,19 @@
         </form>
     </script>
 
-    <div class="cart"></div>
+    <ul class="list-group" id="cart-list">       
+      </ul>
     <script type="text/template" id="cart-template">
-        <ul class="list-group" id="cart-list">
-                <li class="list-group-item">Cras justo odio</li>
-                <li class="list-group-item">Dapibus ac facilisis in</li>
-                <li class="list-group-item">Morbi leo risus</li>
-                <li class="list-group-item">Porta ac consectetur ac</li>
-                <li class="list-group-item">Vestibulum at eros</li>
-        </ul>
+      
     </script>
 
 
   <script type="text/template" id="cart-item-template">
+    <li>
       <label><%- title %></label>
       <label><%- price %></label>
       <a class="destroy"></a>
+    </li>
   </script>
 </body>
 
