@@ -33,7 +33,7 @@ $(function() {
     });
 
 
-    var User = new Backbone.Model.extend({
+    var User =  Backbone.Model.extend({
         defaults: function() {
             return {
                 username: "default username",
@@ -56,14 +56,39 @@ $(function() {
                 case "create": options.url = usersUrl;                    break; 
             }
             return Backbone.sync(method, model, options);
+        },
+        login: function() {
+            this.model.set({isAuth: true});
+            this.model.save();
+        },
+        logout: function() {
+            this.model.set({isAuth: false});
+            this.model.save();
         }
     })
 
-    var UserList = new Backbone.Collection.extend({
+
+
+    var UserList = Backbone.Collection.extend({
         url: usersUrl,
         model: User,
-        
+        comparator: "id",
+        sync: function(method, model, options){
+            switch(method){
+                case "read"  : options.url = usersUrl;                    break; 
+                case "update": options.url = usersUrl + model.get("id");  break; 
+                case "delete": options.url = usersUrl + model.get("id");  break; 
+                case "create": options.url = usersUrl;                    break; 
+            }
+            return Backbone.sync(method, model, options);
+        }
     })
+     var users = new UserList();
+      users.fetch()
+   // users.update({username: "admin", password: "admin"});
+     console.log(users.get({ username: "admin" }));
+     console.log(users.where({username: "admin"}));
+
 
     var CartList = Backbone.Collection.extend({
         model: Goods,
@@ -122,7 +147,6 @@ var CartView = Backbone.View.extend({
     }  
 })
 
-// var fc = new CartView();
 
 
    
