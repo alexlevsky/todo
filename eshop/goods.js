@@ -58,11 +58,11 @@ $(function() {
             return Backbone.sync(method, model, options);
         },
         login: function() {
-            this.model.set({isAuth: true});
+            this.model.set("isAuth", true);
             this.model.save();
         },
         logout: function() {
-            this.model.set({isAuth: false});
+            this.model.set("isAuth", false);
             this.model.save();
         }
     })
@@ -81,13 +81,47 @@ $(function() {
                 case "create": options.url = usersUrl;                    break; 
             }
             return Backbone.sync(method, model, options);
+        },
+        initialize: function(){
+            this.fetch();
+        },
+        findUser: function(username, password){
+          return this.where({ username: username, password: password })
+        }
+    });
+    var users = new UserList();
+
+
+    var LoginView = Backbone.View.extend({
+        model: User,
+        events: {
+            "submit form" : "login"
+        },
+        login: function(){
+            console.log("login events ");
+            console.log($("#loginUsername").val())
+        },
+        render: function(){
+            $(".login").append( $("#login-template").html());
+        },
+        initialize: function(){
+            this.render();
         }
     })
-     var users = new UserList();
-      users.fetch()
-   // users.update({username: "admin", password: "admin"});
-     console.log(users.get({ username: "admin" }));
-     console.log(users.where({username: "admin"}));
+
+    var RegistrationView = Backbone.View.extend({
+        model: User,
+        render: function(){
+            $(".registration").append( $("#registration-template").html());
+        },
+        initialize: function(){
+            this.render();
+        }
+    })
+
+     
+
+
 
 
     var CartList = Backbone.Collection.extend({
@@ -302,27 +336,6 @@ var CartView = Backbone.View.extend({
         }
       
       });
-
-    var LoginView = Backbone.View.extend({
-        render: function(){
-            $(".login").append( $("#login-template").html());
-        },
-        initialize: function(){
-            this.render();
-        }
-    })
-
-    var RegistrationView = Backbone.View.extend({
-        render: function(){
-            $(".login").append( $("#registration-template").html());
-        },
-        initialize: function(){
-            this.render();
-        }
-    })
-
-   
-
 
     
 
