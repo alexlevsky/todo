@@ -107,8 +107,8 @@ $(function() {
                 if(model.get("username") == username
                  && model.get("password") == password){
                      isLogin = true;
-                     sessionStorage.setItem("username", username);
-                     sessionStorage.setItem("password", password);
+                     localStorage.setItem("username", username);
+                     localStorage.setItem("password", password);
                  }
             })
             console.log(isLogin);
@@ -139,8 +139,8 @@ $(function() {
             password: password,
             isAuth: false
            });
-           sessionStorage.setItem("username", username);
-           sessionStorage.setItem("password", password);
+           localStorage.setItem("username", username);
+           localStorage.setItem("password", password);
         },
         render: function(){
             this.$el.html(this.template());
@@ -332,45 +332,50 @@ var CartView = Backbone.View.extend({
 
     var myRouter = Backbone.Router.extend({
         routes: {
-            "":                   "default",
           "login":                 "login",    
           "logout":                 "logout", 
           "registration":            "registration", 
           "goods":                 "goods", 
           "cart":                 "cart", 
           "goods/:id":          "goods",
+          "*default":           "default"
         },
         default: function(){
-            this.navigate("/login");
+            this.navigate("/login", {trigger: true});
             console.log("default router");
         },
         login: function() {
             this.clear();
+            $(".shopModuleApp").hide();
             new LoginView();
         },
         logout: function() {
-            this.navigate("/login");
-            sessionStorage.clear();
+            this.navigate("/login", {trigger: true});
+            localStorage.removeItem("username");
+            localStorage.removeItem("password");
         },
         registration: function() {
             this.clear();
+            $(".shopModuleApp").hide();
             new RegistrationView();
         },
         goods: function(id) {
             if( !this.userIsAuth()){
-                this.navigate("/login");
+                this.navigate("/login", {trigger: true});
                 return;
             }
             this.clear();
+            $(".shopModuleApp").show();
             new AppView();
             console.log("goods router" + id);
         },
         cart: function() {
             if( !this.userIsAuth()){
-             this.navigate("/login");
+             this.navigate("/login",  {trigger: true});
              return;
             }
             this.clear();
+            $(".shopModuleApp").hide();
             console.log("cart router");
             new CartView();
         },
@@ -384,9 +389,9 @@ var CartView = Backbone.View.extend({
          $(".shopModule").empty();
         },
         userIsAuth: function(){
-            if(sessionStorage.getItem("username") == null) return false;
-            var username = sessionStorage.getItem("username");
-            var password = sessionStorage.getItem("password");
+            if(localStorage.getItem("username") == null) return false;
+            var username = localStorage.getItem("username");
+            var password = localStorage.getItem("password");
             isAuth = false;
             users.each(function(model){
                 if(model.get("username") == username &&
