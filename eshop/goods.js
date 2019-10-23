@@ -94,28 +94,53 @@ $(function() {
 
     var LoginView = Backbone.View.extend({
         model: User,
+        el: ".login",
+        template: _.template($('#login-template').html()),
         events: {
             "submit form" : "login"
         },
         login: function(){
-            console.log("login events ");
-            console.log($("#loginUsername").val())
+            var isLogin = false;
+            users.each(function(model){
+                if(model.get("username") == $("#loginUsername").val()
+                 && model.get("password") == $("#loginPassword").val()){
+                     isLogin = true;
+                 }
+            })
+            console.log(isLogin);
+            return isLogin;
         },
         render: function(){
-            $(".login").append( $("#login-template").html());
+            this.$el.html(this.template());
+            return this;
         },
         initialize: function(){
             this.render();
+            return this;
         }
     })
 
     var RegistrationView = Backbone.View.extend({
         model: User,
+        el: ".registration",
+        template: _.template($("#registration-template").html()),
+        events: {
+            "submit form" : "regist"
+        },
+        regist: function(){
+          users.create({ 
+            username: $("#regUsername").val(),
+            password: $("#regPassword").val(),
+            isAuth: false
+           })
+        },
         render: function(){
-            $(".registration").append( $("#registration-template").html());
+            this.$el.html(this.template());
+            return this;
         },
         initialize: function(){
             this.render();
+            return this;
         }
     })
 
@@ -312,28 +337,36 @@ var CartView = Backbone.View.extend({
             console.log("default router");
         },
         login: function() {
+            this.clear();
             new LoginView();
         },
         logout: function() {
             console.log("logout router");
         },
         registration: function() {
+            this.clear();
             new RegistrationView();
         },
         goods: function(id) {
+            this.clear();
             var App = new AppView();
             console.log("goods router" + id);
         },
         cart: function() {
+            this.clear();
             console.log("cart router");
             new CartView();
         },
         notFound: function(){
+            this.clear();
             console.log("url not found 404 error");
         },
         initialize: function(){
             Backbone.history.start();
-        }
+        },
+        clear: function(){
+          //   $("div").empty();
+        } 
       
       });
 
