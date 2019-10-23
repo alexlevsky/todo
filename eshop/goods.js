@@ -102,9 +102,13 @@ $(function() {
         login: function(){
             var isLogin = false;
             users.each(function(model){
-                if(model.get("username") == $("#loginUsername").val()
-                 && model.get("password") == $("#loginPassword").val()){
+                var username = $("#loginUsername").val();
+                var password = $("#loginPassword").val();
+                if(model.get("username") == username
+                 && model.get("password") == password){
                      isLogin = true;
+                     sessionStorage.setItem("username", username);
+                     sessionStorage.setItem("password", password);
                  }
             })
             console.log(isLogin);
@@ -128,11 +132,15 @@ $(function() {
             "submit form" : "regist"
         },
         regist: function(){
+          var username = $("#regUsername").val();
+          var password = $("#regPassword").val();
           users.create({ 
-            username: $("#regUsername").val(),
-            password: $("#regPassword").val(),
+            username: username,
+            password: password,
             isAuth: false
-           })
+           });
+           sessionStorage.setItem("username", username);
+           sessionStorage.setItem("password", password);
         },
         render: function(){
             this.$el.html(this.template());
@@ -337,28 +345,31 @@ var CartView = Backbone.View.extend({
             console.log("default router");
         },
         login: function() {
-            this.clear();
             new LoginView();
         },
         logout: function() {
-            console.log("logout router");
+            sessionStorage.clear();
         },
         registration: function() {
-            this.clear();
             new RegistrationView();
         },
         goods: function(id) {
-            this.clear();
+            if( !this.userIsAuth()){
+                this.navigate("/login");
+                return;
+            }
             var App = new AppView();
             console.log("goods router" + id);
         },
         cart: function() {
-            this.clear();
+            if( !this.userIsAuth()){
+             this.navigate("/login");
+             return;
+            }
             console.log("cart router");
             new CartView();
         },
         notFound: function(){
-            this.clear();
             console.log("url not found 404 error");
         },
         initialize: function(){
@@ -366,8 +377,22 @@ var CartView = Backbone.View.extend({
         },
         clear: function(){
           //   $("div").empty();
-        } 
-      
+        },
+        userIsAuth: function(){
+            if(sessionStorage.getItem("username") == null) return false;
+            var username = sessionStorage.getItem("username");
+            var password = sessionStorage.getItem("password");
+            isAuth = false;
+            users.each(function(model){
+                if(model.get("username") == username &&
+                   model.get("password") == password){
+                       isAuth = true;
+                   } 
+            })
+            console.log("userIsAuth   " + isAuth);
+            return isAuth;
+        }
+    
       });
 
     
