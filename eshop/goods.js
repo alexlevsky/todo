@@ -190,7 +190,7 @@ var CartView = Backbone.View.extend({
           //  console.log($('ul.list-group'));
             $("ul.list-group").append(view);
         })
-        $("ul.list-group").append("<h3 class='total'>Total " + this.calculateTotal() + " $</h3>");
+        $("ul.list-group").append("<h3 class='total'>Total: " + this.calculateTotal() + " $</h3>");
         return this;
     },
     initialize: function(){
@@ -225,7 +225,7 @@ var CartView = Backbone.View.extend({
         mode: "server",
         comparator: 'id',
         state: {
-          pageSize: 4,
+          pageSize: 20,
           sortKey: "title",
           order: 1,
         },

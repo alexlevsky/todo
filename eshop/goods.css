@@ -6,35 +6,9 @@ body {
 
 body {
 	font: 14px "Helvetica Neue", Helvetica, Arial, sans-serif;
-	line-height: 1.4em;
-	background: #eeeeee;
-	color: #333333;
-	margin: 0 auto;
-	-webkit-font-smoothing: antialiased;
 }
 
-#goodsapp {
-	background: rgb(194, 238, 255);
-	padding: 20px;
-	margin-bottom: 40px;
-	-webkit-box-shadow: rgba(0, 0, 0, 0.2) 0 2px 6px 0;
-	-moz-box-shadow: rgba(0, 0, 0, 0.2) 0 2px 6px 0;
-	-ms-box-shadow: rgba(0, 0, 0, 0.2) 0 2px 6px 0;
-	-o-box-shadow: rgba(0, 0, 0, 0.2) 0 2px 6px 0;
-	box-shadow: rgba(0, 0, 0, 0.2) 0 2px 6px 0;
-	-webkit-border-radius: 0 0 5px 5px;
-	-moz-border-radius: 0 0 5px 5px;
-	-ms-border-radius: 0 0 5px 5px;
-	-o-border-radius: 0 0 5px 5px;
-	border-radius: 0 0 5px 5px;
-}
 
-#goodsapp h1 {
-	font-size: 36px;
-	font-weight: bold;
-	text-align: center;
-	padding: 0 0 10px 0;
-}
 
 #goods-list {
 	margin: 10px 0;
@@ -43,14 +17,13 @@ body {
 }
 
 #goods-list li {
-	padding: 18px 20px 18px 0;
+	padding: 18px 20px 18px 10px;
 	position: relative;
 	font-size: 24px;
 	border-bottom: 1px solid #cccccc;
 	color: #000000;
-	margin-top: 3px;
-	margin-bottom:  3px;
-	border: 1px rgb(14, 14, 14) solid
+	margin: 5px;
+	border: 1px rgb(14, 14, 14) solid;
 }
 
 
@@ -89,15 +62,9 @@ body {
 	margin: 0 -20px -20px -20px;
 	overflow: hidden;
 	color: #555555;
-	background: #d0effc;
 	border-top: 1px solid #ededed;
 	padding: 0 20px;
 	line-height: 37px;
-	-webkit-border-radius: 0 0 5px 5px;
-	-moz-border-radius: 0 0 5px 5px;
-	-ms-border-radius: 0 0 5px 5px;
-	-o-border-radius: 0 0 5px 5px;
-	border-radius: 0 0 5px 5px;
 }
 
 .hidden {
@@ -135,4 +102,30 @@ body {
  .price {
 	display: flex;
 	justify-content: flex-end;
+ }
+
+ #addToCart{
+	display: flex;
+	justify-content: flex-end; 
+ }
+
+ .card-group > li {
+	
+ }
+
+ .shopModule {
+	 display: flex;
+	 justify-content: center;
+	 align-content: center;
+ }
+
+ .total {
+   display: flex;
+   justify-content: flex-end;
+   margin-top: 20px;
+ }
+
+ img {
+	 height: 200px;
+	 width: 200px;
  }

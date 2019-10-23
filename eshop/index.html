@@ -25,9 +25,6 @@
         <li class="nav-item">
           <a class="btn btn-link" href="#logout" role="button">Logout</a>
         </li>
-        <li class="nav-item">
-          <a class="btn btn-link" href="#random" role="button">404</a>
-         </li>
         </ul>
     
 
@@ -44,18 +41,14 @@
     <!-- Templates -->
 
     <script type="text/template" id="item-template">
-        <div class="view">
-            <label  class="nameOfGoods"> <%- title %></label>
-            <label  class="priceOfGoods"> <%- price %>$</label>
             <div class="card">
                     <img class="card-img-top" src="<%= image %>" alt="Card image cap">
                     <div class="card-body">
                       <h5 class="card-title"><%- title %></h5>
-                      <p class="card-text"><%- price %> $</p>
+                      <span class="card-text"><%- price %> $</span>
                       <button type="button" class="btn btn-primary" id="addToCart">buy</button>
                     </div>
                   </div>
-        </div>
     </script>
 
 
