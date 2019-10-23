@@ -339,18 +339,21 @@ var CartView = Backbone.View.extend({
           "goods":                 "goods", 
           "cart":                 "cart", 
           "goods/:id":          "goods",
-          "*random" :             "notFound",
         },
         default: function(){
+            this.navigate("/login");
             console.log("default router");
         },
         login: function() {
+            this.clear();
             new LoginView();
         },
         logout: function() {
+            this.navigate("/login");
             sessionStorage.clear();
         },
         registration: function() {
+            this.clear();
             new RegistrationView();
         },
         goods: function(id) {
@@ -358,7 +361,8 @@ var CartView = Backbone.View.extend({
                 this.navigate("/login");
                 return;
             }
-            var App = new AppView();
+            this.clear();
+            new AppView();
             console.log("goods router" + id);
         },
         cart: function() {
@@ -366,6 +370,7 @@ var CartView = Backbone.View.extend({
              this.navigate("/login");
              return;
             }
+            this.clear();
             console.log("cart router");
             new CartView();
         },
@@ -376,7 +381,7 @@ var CartView = Backbone.View.extend({
             Backbone.history.start();
         },
         clear: function(){
-          //   $("div").empty();
+         $(".shopModule").empty();
         },
         userIsAuth: function(){
             if(sessionStorage.getItem("username") == null) return false;

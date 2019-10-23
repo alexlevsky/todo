@@ -16,16 +16,8 @@
         <a class="btn btn-link" href="#logout" role="button">Logout</a>
         <a class="btn btn-link" href="*random" role="button">404</a>
 
-    <div id="goodsapp">
+    
 
-        <section id="main">
-            <div class="card-group" id="goods-list"></div>
-        </section>
-
-        <footer>
-        </footer>
-
-    </div>
 
     <script src="../lib/json2.js"></script>
     <script src="../lib/jquery-3.0.0.min.js"></script>
@@ -63,12 +55,11 @@
                 <button id="pageNum">3</button>
                 <button id="nextPage">></button>
                 <button id="lastPage">>></button>
-        </div>
-            
+        </div>        
     </script>
 
 
-    <div class="login"></div>
+    
     <script type="text/template" id="login-template">
         <form>
             <h2>Login</h2>
@@ -84,7 +75,7 @@
         </form>
     </script>
 
-    <div class="registration"></div>
+    
     <script type="text/template" id="registration-template">
         <form>
             <h2>Registration</h2>
@@ -100,8 +91,18 @@
         </form>
     </script>
 
-    <ul class="list-group" id="cart-list">       
-   </ul>
+
+    <div id="goodsapp" class="shopzModule">
+      <section id="main">
+          <div class="card-group" id="goods-list"></div>
+      </section>
+      <footer>
+      </footer>
+  </div>
+
+  <div class="registration shopModule"></div>
+  <div class="login        shopModule"></div>
+  <ul class="list-group    shopModule" id="cart-list"></ul>
 
 </body>
 
