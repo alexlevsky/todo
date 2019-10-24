@@ -268,7 +268,6 @@ var GoodsList = Backbone.PageableCollection.extend({
         },
         showItem: function(){
           router.navigate("/goods/" + this.model.id, {trigger: true});
-          console.log(Backbone.history)
         },
         addToCart: function(){
           console.log("addToCart");
@@ -367,6 +366,15 @@ var GoodsList = Backbone.PageableCollection.extend({
         collection: historyGoods,
         el: $("#history-goods"),
         template: _.template($("#historyGoods-template").html()),
+        events: {
+            "click img"           : "showItemAgain",
+            "click h5.card-title" : "showItemAgain"
+        },
+        showItemAgain: function(){
+            console.log("showItemAgain func" + this.model.id);
+          //   $(".shopModule").empty();
+          //   router.navigate("/goods/" + this.model.id, {trigger: true});
+        },
         render: function(){
             var self = this;
             self.$el.append("<h1>Recently viewed: </h1><p></p>");
