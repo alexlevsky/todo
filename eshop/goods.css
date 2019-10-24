@@ -109,7 +109,7 @@ body {
  }
 
  .card-group > li:hover {
-	
+	background-color: tan;
  }
 
  .shopModule {
@@ -147,5 +147,11 @@ body {
  .item {
 	 height: 50px;
 	 font-size: 26px;
+ }
+
+ #applySort {
+	 margin: 10px;
+	 display: flex;
+	 justify-content: flex-end;
  }
  

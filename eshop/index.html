@@ -97,23 +97,41 @@
         </form>
     </script>
 
+    <script type="text/template" id="goodsItem-template">
+      <div class="itemContainer">
+          <img class="imgItem" src="<%= image %>">
+          <div class="item itemTitle">title: <%- title %></div>
+          <div class="item itemPrice">price: <%- price %> $</div>
+          <div class="item itemDesc">description:  <%- description %></div>
+      </div>
+  </script>
+
 
   <div id="goodsapp" class="shopModuleApp">
       <section id="main">
-          <div class="card-group" id="goods-list"></div>
+        <div class="row">
+          <div class="options col-sm-2">
+      
+            <h3 for="sortKey">Sorting field</h3>
+            <select id="sortKey" class="form-control">
+                <option selected>title</option>
+                <option>price</option>
+            </select>
+
+            <h3 for="sortDir">Direction</h3>
+            <select id="sortDir" class="form-control">
+                <option selected>asc</option>
+                <option>desc</option>
+            </select>
+
+            <button class="btn btn-primary" id="applySort">Apply</button>
+          </div>
+          <div class="card-group col-sm-10" id="goods-list"></div>
+        </div>
       </section>
       <footer>
       </footer>
   </div>
-
-  <script type="text/template" id="goodsItem-template">
-    <div class="itemContainer">
-        <img class="imgItem" src="<%= image %>">
-        <div class="item itemTitle">title: <%- title %></div>
-        <div class="item itemPrice">price: <%- price %> $</div>
-        <div class="item itemDesc">description:  <%- description %></div>
-    </div>
-</script>
 
   <div class="registration shopModule"></div>
   <div class="login        shopModule"></div>

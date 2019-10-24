@@ -214,44 +214,44 @@ var CartView = Backbone.View.extend({
     }  
 })
 
-
-
-   
-
-
-    var GoodsList = Backbone.PageableCollection.extend({
-        url: mockBaseUrl,
-        model: Goods,
-        mode: "server",
-        comparator: 'id',
-        state: {
-          pageSize: 20,
-          sortKey: "title",
-          order: 1,
-        },
-        queryParams: {
-          currentPage: "page",
-          pageSize: "limit",
-        },
-        sync: function(method, model, options){
-            switch(method){
-                case   "read": options.url = mockBaseUrl;                       break; 
-                case "update": options.url = mockBaseUrl + model.get("id");  break; 
-                case "delete": options.url = mockBaseUrl + model.get("id");  break; 
-                case "create": options.url = mockBaseUrl;                       break; 
-            }
-            return Backbone.sync(method, model, options);
-        },
-        initialize: function(){
-            var self = this;
-            this.on("request", function(){
-                $.get(mockBaseUrl, function(data){
-                    self.state.lastPage =  Math.ceil( data.length / self.state.pageSize);  
-                });
-            })
+var GoodsList = Backbone.PageableCollection.extend({
+    url: mockBaseUrl,
+    model: Goods,
+    mode: "server",
+    comparator: 'id',
+    state: {
+      pageSize: 20,
+      sortKey: "title",
+      order: 1,
+    },
+    queryParams: {
+      currentPage: "page",
+      pageSize: "limit",
+      sortKey: "orderBy",
+      order: "order",
+      directions: {
+      "1": "asc",
+      "-1": "desc"
+     }
+    },
+    sync: function(method, model, options){
+        switch(method){
+            case   "read": options.url = mockBaseUrl;                       break; 
+            case "update": options.url = mockBaseUrl + model.get("id");  break; 
+            case "delete": options.url = mockBaseUrl + model.get("id");  break; 
+            case "create": options.url = mockBaseUrl;                       break; 
         }
-      });
-
+        return Backbone.sync(method, model, options);
+    },
+    initialize: function(){
+        var self = this;
+        this.on("request", function(){
+            $.get(mockBaseUrl, function(data){
+                self.state.lastPage =  Math.ceil( data.length / self.state.pageSize);  
+            });
+        })
+    }
+  });
         
       var goods = new GoodsList();  
 
@@ -267,6 +267,7 @@ var CartView = Backbone.View.extend({
         },
         showItem: function(){
           router.navigate("/goods/" + this.model.id, {trigger: true});
+          console.log(Backbone.history)
         },
         addToCart: function(){
           console.log("addToCart");
@@ -281,6 +282,8 @@ var CartView = Backbone.View.extend({
         }
     });
 
+    
+
     var AppView = Backbone.View.extend({
         el: $("#goodsapp"),
         statsTemplate: _.template($('#stats-template').html()),
@@ -291,6 +294,15 @@ var CartView = Backbone.View.extend({
             "click #firstPage": "firstPage",
             "click #lastPage": "lastPage",
             "click #pageNum" : "getPage",
+            "click #applySort" : "setSorting"
+        },
+        setSorting: function(){
+            var dir;
+             if($("#sortDir").val() == "asc") dir = 1;
+             else dir = -1;
+
+            goods.setSorting($("#sortKey").val(), dir);
+           goods.fetch();
         },
         nextPage: function(){
             if(goods.hasNextPage()){
