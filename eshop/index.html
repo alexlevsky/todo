@@ -106,26 +106,42 @@
       </div>
   </script>
 
+  <script type="text/template" id="historyGoods-template">
+    <div class="card">
+        <img class="card-img-top" src="<%= image %>" alt="Card image cap">
+        <div class="card-body">
+          <h5 class="card-title"><%- title %></h5>
+          <span class="card-text"><%- price %> $</span>
+          <button type="button" class="btn btn-primary" id="addToCart">buy</button>
+        </div>
+    </div>
+</script>
+
+  
+
 
   <div id="goodsapp" class="shopModuleApp">
       <section id="main">
         <div class="row">
           <div class="options col-sm-2">
-      
-            <h3 for="sortKey">Sorting field</h3>
+            <h1>Sorting</h1>
+            <h4 for="sortKey">Sorting field</h4>
             <select id="sortKey" class="form-control">
                 <option selected>title</option>
                 <option>price</option>
             </select>
 
-            <h3 for="sortDir">Direction</h3>
+            <h4 for="sortDir">Direction</h4>
             <select id="sortDir" class="form-control">
                 <option selected>asc</option>
                 <option>desc</option>
             </select>
 
-            <button class="btn btn-primary" id="applySort">Apply</button>
+            <button class="btn btn-primary" id="applySort">Apply Sort</button>
+
           </div>
+              
+
           <div class="card-group col-sm-10" id="goods-list"></div>
         </div>
       </section>
@@ -137,6 +153,10 @@
   <div class="login        shopModule"></div>
   <ul class="list-group    shopModule" id="cart-list"></ul>
   <div class="goodsItemView shopModule" id="cart-item"></div>
+
+  <div id="history-goods" class="shopModule"></div>
+
+
 </body>
 
 </html>

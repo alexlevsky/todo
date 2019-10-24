@@ -74,6 +74,7 @@ body {
  .pagGroup{
 	display: flex;
 	justify-content: center;
+	margin: 50px;
  }
 
  .priceOfGoods {
@@ -142,6 +143,7 @@ body {
 	display: flex;
 	justify-content: center;
 	flex-direction: column;
+	margin: 60px;
  }
 
  .item {
@@ -153,5 +155,10 @@ body {
 	 margin: 10px;
 	 display: flex;
 	 justify-content: flex-end;
+ }
+
+ #histiry-goods {
+	overflow: auto;
+	margin: 50px;
  }
  

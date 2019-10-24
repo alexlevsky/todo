@@ -360,6 +360,27 @@ var GoodsList = Backbone.PageableCollection.extend({
         }
     })
 
+    var historyGoods = new GoodsList();
+
+    var HistoryGoodsView = Backbone.View.extend({
+        collection: historyGoods,
+        el: $("#history-goods"),
+        template: _.template($("#historyGoods-template").html()),
+        render: function(){
+            var self = this;
+            self.$el.append("<h1>Recently viewed: </h1><p></p>");
+            self.collection.each(function(model){
+                console.log(model.toJSON());
+                self.$el.append(self.template(model.toJSON()));
+            })
+            return self;
+        },
+        initialize: function(){
+            this.render();
+            return this;
+        }
+    })
+
     var myRouter = Backbone.Router.extend({
         routes: {
           "login":                 "login",    
@@ -397,7 +418,10 @@ var GoodsList = Backbone.PageableCollection.extend({
             if(id){
                 $(".shopModuleApp").hide();
                var g = goods.findWhere({ id: id }); 
+               historyGoods.push(g);
+        
                new GoodsItemView({ model: g });
+               new HistoryGoodsView({ model: g });
                return;
             }
             this.clear();
