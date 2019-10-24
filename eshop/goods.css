@@ -105,12 +105,11 @@ body {
  }
 
  #addToCart{
-	display: flex;
-	justify-content: flex-end; 
+	float: right;
  }
 
  .card-group > li:hover {
-	background-color: tan;
+	background-color: rgb(239, 239, 239);
  }
 
  .shopModule {
@@ -126,8 +125,8 @@ body {
  }
 
  img {
-	 height: 200px;
-	 width: 200px;
+	 height: 150px;
+	 width: 100px;
  }
 
  .btn {
@@ -152,13 +151,22 @@ body {
  }
 
  #applySort {
-	 margin: 10px;
-	 display: flex;
-	 justify-content: flex-end;
+	 margin-top: 30px;
+	 float: right;
  }
 
  #histiry-goods {
 	overflow: auto;
 	margin: 50px;
  }
+
+ .card {
+	 height: auto;
+	 width: 250px;
+ }
+
+ h5.card-title:hover {
+	color: red;
+ }
+
  

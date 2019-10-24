@@ -259,8 +259,9 @@ var GoodsList = Backbone.PageableCollection.extend({
         tagName: "li",
         template: _.template($('#item-template').html()),
         events: {
-            "click #addToCart" : "addToCart",
-            "click img"        : "showItem"
+            "click #addToCart"    : "addToCart",
+            "click img"           : "showItem",
+            "click h5.card-title" : "showItem"
         },
         initialize: function() {
 
@@ -370,7 +371,6 @@ var GoodsList = Backbone.PageableCollection.extend({
             var self = this;
             self.$el.append("<h1>Recently viewed: </h1><p></p>");
             self.collection.each(function(model){
-                console.log(model.toJSON());
                 self.$el.append(self.template(model.toJSON()));
             })
             return self;
