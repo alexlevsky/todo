@@ -106,10 +106,19 @@
       </footer>
   </div>
 
+  <script type="text/template" id="goodsItem-template">
+    <div class="itemContainer">
+        <img class="imgItem" src="<%= image %>">
+        <div class="item itemTitle">title: <%- title %></div>
+        <div class="item itemPrice">price: <%- price %> $</div>
+        <div class="item itemDesc">description:  <%- description %></div>
+    </div>
+</script>
+
   <div class="registration shopModule"></div>
   <div class="login        shopModule"></div>
   <ul class="list-group    shopModule" id="cart-list"></ul>
-
+  <div class="goodsItemView shopModule" id="cart-item"></div>
 </body>
 
 </html>

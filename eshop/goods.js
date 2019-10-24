@@ -259,13 +259,17 @@ var CartView = Backbone.View.extend({
         tagName: "li",
         template: _.template($('#item-template').html()),
         events: {
-            "click #addToCart": "addToCart"
+            "click #addToCart" : "addToCart",
+            "click img"        : "showItem"
         },
         initialize: function() {
 
         },
+        showItem: function(){
+          router.navigate("/goods/" + this.model.id, {trigger: true});
+        },
         addToCart: function(){
-          //  console.log(this.model.get("title"))
+          console.log("addToCart");
             carts.create({ 
                 title: this.model.get("title"), 
                 price: this.model.get("price")
@@ -330,14 +334,28 @@ var CartView = Backbone.View.extend({
         }
     });
 
+    var GoodsItemView = Backbone.View.extend({
+        model: Goods,
+        el: $("#cart-item"),
+        template: _.template($("#goodsItem-template").html()),
+        render: function(){
+            this.$el.html(this.template(this.model.toJSON()))
+            return this;
+        },
+        initialize: function(){
+            this.render();
+            return this;
+        }
+    })
+
     var myRouter = Backbone.Router.extend({
         routes: {
           "login":                 "login",    
           "logout":                 "logout", 
           "registration":            "registration", 
+          "goods/:id":          "goods",
           "goods":                 "goods", 
           "cart":                 "cart", 
-          "goods/:id":          "goods",
           "*default":           "default"
         },
         default: function(){
@@ -364,10 +382,15 @@ var CartView = Backbone.View.extend({
                 this.navigate("/login", {trigger: true});
                 return;
             }
+            if(id){
+                $(".shopModuleApp").hide();
+               var g = goods.findWhere({ id: id }); 
+               new GoodsItemView({ model: g });
+               return;
+            }
             this.clear();
             $(".shopModuleApp").show();
             new AppView();
-            console.log("goods router" + id);
         },
         cart: function() {
             if( !this.userIsAuth()){
@@ -392,7 +415,7 @@ var CartView = Backbone.View.extend({
             if(localStorage.getItem("username") == null) return false;
             var username = localStorage.getItem("username");
             var password = localStorage.getItem("password");
-            isAuth = false;
+            var isAuth = false;
             users.each(function(model){
                 if(model.get("username") == username &&
                    model.get("password") == password){

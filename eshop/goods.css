@@ -108,7 +108,7 @@ body {
 	justify-content: flex-end; 
  }
 
- .card-group > li {
+ .card-group > li:hover {
 	
  }
 
@@ -133,4 +133,19 @@ body {
 	 margin-left: 1px;
  }
 
+ .imgItem{
+	 height: 600px;
+	 width: 600px;
+ }
+
+ .itemContainer {
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+ }
+
+ .item {
+	 height: 50px;
+	 font-size: 26px;
+ }
  
