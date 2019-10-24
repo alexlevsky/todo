@@ -17,13 +17,12 @@ body {
 }
 
 #goods-list li {
-	padding: 18px 20px 18px 10px;
+	padding: 1px 2px 1px 1px;
 	position: relative;
 	font-size: 24px;
-	border-bottom: 1px solid #cccccc;
 	color: #000000;
-	margin: 5px;
-	border: 1px rgb(14, 14, 14) solid;
+	margin: 2px;
+	
 }
 
 
@@ -129,3 +128,9 @@ body {
 	 height: 200px;
 	 width: 200px;
  }
+
+ .btn {
+	 margin-left: 1px;
+ }
+
+ 
