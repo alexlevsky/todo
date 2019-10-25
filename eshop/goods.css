@@ -122,6 +122,7 @@ body {
    display: flex;
    justify-content: flex-end;
    margin-top: 20px;
+   margin-right: 45px;
  }
 
  img {
@@ -161,7 +162,7 @@ body {
  }
 
  .card {
-	 height: auto;
+	 height: 320px;
 	 width: 250px;
  }
 

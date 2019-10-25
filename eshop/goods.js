@@ -183,8 +183,8 @@ var CartView = Backbone.View.extend({
     $("#cart-list").empty();
         carts.each(function(model){
             view = "<li class='list-group-item' id='" +  model.get("id")  +  "'>" +
-             "<label class='title'>"  + model.get("title") + "</label>" +
-             "<label class='price'>"  + model.get("price") + " $ </label>" +
+             "<label style='font-size: 35px;'>"  + model.get("title") + "</label>" +
+             "<label style='font-size: 25px; float: right; margin-right: 25px;'>"  + model.get("price") + " $ </label>" +
              "<a class='destroy'></a>" +
              "</li>"; 
           //  console.log($('ul.list-group'));
@@ -325,14 +325,14 @@ var GoodsList = Backbone.PageableCollection.extend({
             this.$("#goods-list").empty();
         },
         getPage: function(e){
-          goods.getPage(parseInt(e.srcElement.innerHTML));
+          goods.getPage(parseInt(e.currentTarget.innerHTML));
           this.$("#goods-list").empty();
         },
         initialize: function() {
             this.listenTo(goods, 'add', this.addOne);
             this.listenTo(goods, 'all', this.render);
             this.footer = this.$('footer');
-           goods.fetch();
+            goods.fetch();
         },
         addOne: function(goodsModel) {
             console.log("add one func");
