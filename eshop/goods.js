@@ -405,9 +405,16 @@ var GoodsList = Backbone.PageableCollection.extend({
             console.log("default router");
         },
         login: function() {
-            this.clear();
-            $(".shopModuleApp").hide();
-            new LoginView();
+            debugger
+            this.listenTo(users, 'sync', () => {
+                if (this.userIsAuth()) {
+                    this.navigate("/goods", {trigger: true});
+                } else {
+                    this.clear();
+                    $(".shopModuleApp").hide();
+                    new LoginView();
+                }
+            });
         },
         logout: function() {
             this.navigate("/login", {trigger: true});
