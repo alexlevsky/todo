@@ -405,8 +405,7 @@ var GoodsList = Backbone.PageableCollection.extend({
             console.log("default router");
         },
         login: function() {
-            debugger
-            this.listenTo(users, 'sync', () => {
+            users.fetch().then(() => {
                 if (this.userIsAuth()) {
                     this.navigate("/goods", {trigger: true});
                 } else {
