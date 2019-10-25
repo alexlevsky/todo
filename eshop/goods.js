@@ -8,6 +8,7 @@ $(function() {
             return {
                 title: "default good",
                 price: 0,
+                count: 1,
                 description: "default description",
             };
         },
@@ -186,6 +187,7 @@ var CartView = Backbone.View.extend({
             view = "<li class='list-group-item' id='" +  model.get("id")  +  "'>" +
              "<label style='font-size: 35px;'>"  + model.get("title") + "</label>" +
              "<label style='font-size: 25px; float: right; margin-right: 25px;'>"  + model.get("price") + " $ </label>" +
+              "<input type='number' class='form-control w-50' style='widht: 35px;' value='" + model.get("count") + "'>" 
              "<a class='destroy'></a>" +
              "</li>"; 
           //  console.log($('ul.list-group'));
@@ -271,11 +273,22 @@ var GoodsList = Backbone.PageableCollection.extend({
           router.navigate("/goods/" + this.model.id, {trigger: true});
         },
         addToCart: function(){
-          console.log("addToCart");
+         var d = carts.findWhere({ 
+            title: this.model.get("title"),
+            price: this.model.get("price")
+          })
+          if(!d){
             carts.create({ 
                 title: this.model.get("title"), 
-                price: this.model.get("price")
-             }); 
+                price: this.model.get("price"),
+                count: 1
+             });
+          }else{
+             var c = carts.get(d.id).get("count");
+             var mod = carts.get(d.id).set({count: c + 1 });
+             mod.save();
+          }
+             
         },
         render: function() {
             this.$el.html(this.template(this.model.toJSON()));
