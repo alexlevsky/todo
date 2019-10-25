@@ -302,7 +302,8 @@ var GoodsList = Backbone.PageableCollection.extend({
              else dir = -1;
 
             goods.setSorting($("#sortKey").val(), dir);
-           goods.fetch();
+            this.$("#goods-list").empty();
+            goods.getPage(1);
         },
         nextPage: function(){
             if(goods.hasNextPage()){
