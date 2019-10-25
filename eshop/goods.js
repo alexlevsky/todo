@@ -83,7 +83,6 @@ $(function() {
             return Backbone.sync(method, model, options);
         },
         initialize: function(){
-            this.fetch();
         },
         findUser: function(username, password){
           return this.where({ username: username, password: password })
@@ -112,6 +111,7 @@ $(function() {
                  }
             })
             console.log(isLogin);
+            router.navigate("/goods", { trigger: true })
             return isLogin;
         },
         render: function(){
@@ -141,6 +141,7 @@ $(function() {
            });
            localStorage.setItem("username", username);
            localStorage.setItem("password", password);
+           router.navigate("/goods", { trigger: true });
         },
         render: function(){
             this.$el.html(this.template());
@@ -407,6 +408,7 @@ var GoodsList = Backbone.PageableCollection.extend({
         login: function() {
             users.fetch().then(() => {
                 if (this.userIsAuth()) {
+                    this.changeNav(true);
                     this.navigate("/goods", {trigger: true});
                 } else {
                     this.clear();
@@ -419,6 +421,7 @@ var GoodsList = Backbone.PageableCollection.extend({
             this.navigate("/login", {trigger: true});
             localStorage.removeItem("username");
             localStorage.removeItem("password");
+            this.changeNav(false);
         },
         registration: function() {
             this.clear();
@@ -434,6 +437,8 @@ var GoodsList = Backbone.PageableCollection.extend({
                 $(".shopModuleApp").hide();
                var g = goods.findWhere({ id: id }); 
                historyGoods.push(g);
+               if(historyGoods.length > 5)
+                historyGoods.shift();
         
                new GoodsItemView({ model: g });
                new HistoryGoodsView({ model: g });
@@ -473,8 +478,18 @@ var GoodsList = Backbone.PageableCollection.extend({
                        isAuth = true;
                    } 
             })
+            this.changeNav(isAuth);
             console.log("userIsAuth   " + isAuth);
             return isAuth;
+        },
+        changeNav: function(isAuth){
+            if(isAuth){
+                $(".authTrue").show();
+                $(".authFalse").hide();
+            } else {
+                $(".authTrue").hide();
+                $(".authFalse").show();
+            }
         }
     
       });
