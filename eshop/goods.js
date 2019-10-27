@@ -179,6 +179,12 @@ var CartView = Backbone.View.extend({
     // template: _.template($("#cart-template").html()),
     events: {
         "click a.destroy" : "clear",
+        "change input": "changeCount"
+    },
+    changeCount: function(e){
+       var id = e.currentTarget.parentElement.id;
+       console.log( $("#" + id + " > input").val() );
+       carts.get(id).set({ count:  $("#" + id + "> input").val() });
     },
     render: function(){
     var view = "";
@@ -186,8 +192,9 @@ var CartView = Backbone.View.extend({
         carts.each(function(model){
             view = "<li class='list-group-item' id='" +  model.get("id")  +  "'>" +
              "<label style='font-size: 35px;'>"  + model.get("title") + "</label>" +
-             "<label style='font-size: 25px; float: right; margin-right: 25px;'>"  + model.get("price") + " $ </label>" +
-              "<input type='number' class='form-control w-50' style='widht: 35px;' value='" + model.get("count") + "'>" 
+             "<label style='font-size: 25px; float: right; margin-right: 25px;'>"  + model.get("price") * model.get("count") + " $ </label>" +
+             "<div> Count: </div> <input type='number' class='form-control w-25' style='widht: 35px;' value='" + model.get("count") + "'>"  +
+               
              "<a class='destroy'></a>" +
              "</li>"; 
           //  console.log($('ul.list-group'));
@@ -198,6 +205,7 @@ var CartView = Backbone.View.extend({
     },
     initialize: function(){
         this.listenTo(carts, 'add', this.render);
+        this.listenTo(carts, 'change:count', this.render);
       //  this.listenTo(carts, 'remove', this.remove);
         this.render();
         return this;
@@ -205,7 +213,7 @@ var CartView = Backbone.View.extend({
     calculateTotal: function(){
         var sum = 0;
         carts.each(function(model){
-            sum += parseInt(model.get("price"));
+            sum += parseInt(model.get("price")*model.get("count"));
         })
         return sum;
     },
